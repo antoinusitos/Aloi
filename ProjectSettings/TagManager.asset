@@ -15,9 +15,9 @@ TagManager:
   - 
   - DeadLayer
   - Enemy
-  - 
-  - 
-  - 
+  - Player
+  - GroundCheck
+  - PlayerDash
   - 
   - 
   - 

@@ -8,6 +8,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float myJumpForce = 5.0f;
 
+    [SerializeField]
+    private float myDashForce = 10.0f;
+
     private Rigidbody2D myRigidbody2D = null;
 
     [SerializeField]
@@ -19,23 +22,36 @@ public class PlayerMovement : MonoBehaviour
     private bool myIsGrounded = false;
 
     [SerializeField]
-    private Transform myGroundCheckLeft = null;
-
-    [SerializeField]
-    private Transform myGroundCheckRight = null;
-
-    [SerializeField]
     private Animator myAnimator = null;
 
     private bool myCanMove = true;
+
+    private bool myCanDash = true;
+
+    private bool myIsDashing = false;
+
+    private Vector2 myStickDirection = Vector2.zero;
+
+    private CircleCollider2D myTestGroundCheck = null;
+
+    private float myCurrentDashTime = 0;
+
+    private const float myDashTime = 0.15f;
+
+    private Vector2 myDashDirection = Vector2.zero;
+
     private void Awake()
     {
         myRigidbody2D = GetComponent<Rigidbody2D>();
+        myTestGroundCheck = GetComponent<CircleCollider2D>();
     }
 
     private void Update()
     {
-        myIsGrounded = Physics2D.OverlapArea(myGroundCheckLeft.position, myGroundCheckRight.position);
+        myStickDirection.x = Input.GetAxis("Horizontal");
+        myStickDirection.y = Input.GetAxis("Vertical");
+
+        myIsGrounded = myTestGroundCheck.IsTouchingLayers(LayerMask.GetMask("GroundCheck"));
 
         myAnimator.SetFloat("Speed", myRigidbody2D.velocity.x < 0 ? myRigidbody2D.velocity.x * -1 : myRigidbody2D.velocity.x);
 
@@ -53,9 +69,33 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        if(myIsGrounded)
+        {
+            myCanDash = true;
+        }
+
         if(Input.GetButtonDown("Jump") && myIsGrounded)
         {
             myIsJumping = true;
+        }
+
+        if(Input.GetButtonDown("Dash") && myCanDash && !myIsDashing)
+        {
+            myCanDash = false;
+            myIsDashing = true;
+            myCurrentDashTime = myDashTime;
+            gameObject.layer = 12;
+            myDashDirection = myStickDirection;
+        }
+
+        if(myIsDashing)
+        {
+            myCurrentDashTime -= Time.deltaTime;
+            if(myCurrentDashTime <= 0)
+            {
+                gameObject.layer = 10;
+                myIsDashing = false;
+            }
         }
     }
 
@@ -82,6 +122,11 @@ public class PlayerMovement : MonoBehaviour
         {
             myRigidbody2D.AddForce(Vector2.up * myJumpForce);
             myIsJumping = false;
+        }
+
+        if(myIsDashing)
+        {
+            myRigidbody2D.velocity += myDashDirection.normalized * myDashForce;
         }
     }
 
