@@ -9,6 +9,19 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     private Slider myLifeSlider = null;
 
+    private float myCurrentHeat = 100;
+    private float myMaxHeat = 100;
+
+    private float myHeatCoolSpeed = 5.0f;
+
+    [SerializeField]
+    private Slider myHeatSlider = null;
+
+    private int myCurrency = 100;
+
+    [SerializeField]
+    private Text myCurrentText = null;
+
     [SerializeField]
     private Animator myAnimator = null;
 
@@ -23,7 +36,47 @@ public class PlayerStats : MonoBehaviour
         myPlayerUI = GetComponent<PlayerUI>();
 
         myLifeSlider.value = myCurrentlife / (float)myMaxLife;
+        myHeatSlider.value = myCurrentHeat / myMaxHeat;
         myPlayerMovement = GetComponent<PlayerMovement>();
+        myCurrentText.text = myCurrency.ToString();
+    }
+
+    private void Update()
+    {
+        myCurrentHeat -= Time.deltaTime * myHeatCoolSpeed;
+        myHeatSlider.value = myCurrentHeat / myMaxHeat;
+    }
+
+    public void AddHeat(float value)
+    {
+        if (myIsDead)
+        {
+            return;
+        }
+
+        myCurrentHeat += value;
+    }
+
+    public float GetCurrentHeat()
+    {
+        return myCurrentHeat;
+    }
+
+    public float GetMaxHeat()
+    {
+        return myMaxHeat;
+    }
+
+    public void AddCurrency(int aValue)
+    {
+        myCurrency += aValue;
+        myCurrentText.text = myCurrency.ToString();
+    }
+
+    public void RemoveCurrency(int aValue)
+    {
+        myCurrency -= aValue;
+        myCurrentText.text = myCurrency.ToString();
     }
 
     public void Removelife(int aValue)

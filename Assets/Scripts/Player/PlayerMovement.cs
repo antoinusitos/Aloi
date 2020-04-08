@@ -40,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 myDashDirection = Vector2.zero;
 
+    private float mySpeedBonus = 0f;
+
     private void Awake()
     {
         myRigidbody2D = GetComponent<Rigidbody2D>();
@@ -99,6 +101,16 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void AddSpeedBonus(float aBonus)
+    {
+        mySpeedBonus += aBonus;
+    }
+
+    public void RemoveSpeedBonus(float aBonus)
+    {
+        mySpeedBonus -= aBonus;
+    }
+
     private void FixedUpdate()
     {
         if (!myCanMove)
@@ -108,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        float horizontalMovement = Input.GetAxis("Horizontal") * mySpeed * Time.fixedDeltaTime;
+        float horizontalMovement = Input.GetAxis("Horizontal") * (mySpeed + (mySpeed * mySpeedBonus)) * Time.fixedDeltaTime;
 
         MovePlayer(horizontalMovement);
     }
