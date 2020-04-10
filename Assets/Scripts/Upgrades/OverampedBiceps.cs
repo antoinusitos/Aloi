@@ -8,6 +8,7 @@ public class OverampedBiceps : Upgrade
     public OverampedBiceps()
     {
         myUpgradeName = "Overamped Biceps";
+        myUpgradeDescription = "Moving Faster.";
         myUpgradeType = UpgradeType.TYPEB;
     }
 

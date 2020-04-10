@@ -7,6 +7,7 @@ public class MomentumBooster : Upgrade
     public MomentumBooster()
     {
         myUpgradeName = "Momemtum Booster";
+        myUpgradeDescription = "Dashing downwards creates a deflagration when hitting a platform.";
         myUpgradeType = UpgradeType.TYPEB;
     }
 

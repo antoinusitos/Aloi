@@ -14,7 +14,7 @@ public class UpgradesManager : MonoBehaviour
         LoadUpgrades();
     }
 
-    public UpgradesManager GetInstance()
+    public static UpgradesManager GetInstance()
     {
         return myInstance;
     }
@@ -24,5 +24,10 @@ public class UpgradesManager : MonoBehaviour
         myUpgrades = new List<Upgrade>();
         myUpgrades.Add(new MomentumBooster());
         myUpgrades.Add(new OverampedBiceps());
+    }
+
+    public Upgrade GetUpgrade(int anIndex)
+    {
+        return myUpgrades[anIndex];
     }
 }

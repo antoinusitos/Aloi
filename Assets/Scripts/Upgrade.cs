@@ -12,7 +12,8 @@ public class Upgrade
 {
     protected UpgradeType myUpgradeType;
 
-    protected string myUpgradeName = "";
+    protected string myUpgradeName = "Simple Name";
+    protected string myUpgradeDescription = "Simple Description";
 
     public virtual void UseUpgrade(Player aPlayer)
     {
@@ -27,5 +28,20 @@ public class Upgrade
     public virtual void RemoveUpgrade(Player aPlayer)
     {
         Debug.Log("Removed " + myUpgradeName);
+    }
+
+    public string GetName()
+    {
+        return myUpgradeName;
+    }
+
+    public string GetDescription()
+    {
+        return myUpgradeDescription;
+    }
+
+    public UpgradeType GetMyType()
+    {
+        return myUpgradeType;
     }
 }

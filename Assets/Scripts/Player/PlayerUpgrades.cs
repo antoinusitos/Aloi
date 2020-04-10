@@ -47,4 +47,24 @@ public class PlayerUpgrades : MonoBehaviour
                 }
         }
     }
+
+    public Upgrade[] GetTypeAUpgrades()
+    {
+        return myTypeASlots;
+    }
+
+    public Upgrade[] GetTypeBUpgrades()
+    {
+        return myTypeBSlots;
+    }
+
+    public Upgrade[] GetTypeCUpgrades()
+    {
+        return myTypeCSlots;
+    }
+
+    public Upgrade[] GetTypeDUpgrades()
+    {
+        return myTypeDSlots;
+    }
 }
