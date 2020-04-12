@@ -98,10 +98,18 @@ public class PlayerInventory : MonoBehaviour
 
         if(Input.GetButtonDown("Jump"))
         {
-            myIsReplacing = true;
-            if (myCurrentUpgradeTransformSelected != null && myCurrentUpgradeSelected != null)
+            if(!myIsReplacing)
             {
-                ShowInventoryChip();
+                myIsReplacing = true;
+                if (myCurrentUpgradeTransformSelected != null && myCurrentUpgradeSelected != null)
+                {
+                    ShowInventoryChip();
+                }
+            }
+            else
+            {
+                myIsReplacing = false;
+                HideInventoryChip();
             }
         }
 
@@ -111,12 +119,20 @@ public class PlayerInventory : MonoBehaviour
             {
                 MoveReplaceCursor(true);
             }
+            else
+            {
+                MoveSelectCursor(true);
+            }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (myIsReplacing)
             {
                 MoveReplaceCursor(false);
+            }
+            else
+            {
+                MoveSelectCursor(false);
             }
         }
     }
@@ -251,6 +267,40 @@ public class PlayerInventory : MonoBehaviour
                     myReplaceChipDescText.text = myCurrentUpgradeReplaceSelected.GetDescription();
                 }
             }
+        }
+    }
+
+    private void HideInventoryChip()
+    {
+        myReplaceChipDescriptionObject.SetActive(false);
+
+        myInventoryChipsObject.SetActive(false);
+    }
+
+    private void MoveSelectCursor(bool aMoveRight)
+    {
+        bool found = false;
+
+        if (aMoveRight && myPlayerUpgrades.GetTypeBUpgrades().Length - 1 > myUpgradeIndex)
+        {
+            myUpgradeIndex++;
+            found = true;
+        }
+        else if (!aMoveRight && myUpgradeIndex > 0)
+        {
+            myUpgradeIndex--;
+            found = true;
+        }
+
+        if (found)
+        {
+            myCurrentUpgradeTransformSelected.GetChild(0).gameObject.SetActive(false);
+            myCurrentUpgradeSelected = myPlayerUpgrades.GetTypeBUpgrades()[myUpgradeIndex];
+            myCurrentUpgradeTransformSelected = mySlotBChipsPanel.GetChild(myUpgradeIndex);
+            myCurrentUpgradeTransformSelected.GetChild(0).gameObject.SetActive(true);
+
+            mySelectedChipNameText.text = myCurrentUpgradeSelected.GetName();
+            mySelectedChipDescText.text = myCurrentUpgradeSelected.GetDescription();
         }
     }
 

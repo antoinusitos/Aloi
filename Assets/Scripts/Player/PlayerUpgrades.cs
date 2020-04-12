@@ -26,8 +26,8 @@ public class PlayerUpgrades : MonoBehaviour
 
     private void AddDEBUG()
     {
-        //myTypeBSlots[0] = new OverampedBiceps();
-        //myTypeBSlots[0].AddUpgrade(myPlayer);
+        myTypeBSlots[1] = new OverampedBiceps();
+        myTypeBSlots[1].AddUpgrade(myPlayer);
 
         myTypeBSlots[0] = new MomentumBooster();
         myTypeBSlots[0].AddUpgrade(myPlayer);
