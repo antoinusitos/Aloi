@@ -74,6 +74,10 @@ public class PlayerInventory : MonoBehaviour
     private Sprite myTypeASprite = null;
     [SerializeField]
     private Sprite myTypeBSprite = null;
+    [SerializeField]
+    private Sprite myTypeCSprite = null;
+    [SerializeField]
+    private Sprite myTypeDSprite = null;
 
     private void Start()
     {
@@ -370,7 +374,19 @@ public class PlayerInventory : MonoBehaviour
             {
                 myIsReplacing = true;
                 Transform t = Instantiate(myInventoryChipsItemPrefab, myInventoryChipsPanel);
-                if(myCurrentUpgradeReplaceSelected == null)
+                if(myUpgradeCategoryIndex == 1)
+                {
+                    t.GetComponent<Image>().sprite = myTypeBSprite;
+                }
+                else if (myUpgradeCategoryIndex == 2)
+                {
+                    t.GetComponent<Image>().sprite = myTypeCSprite;
+                }
+                else if (myUpgradeCategoryIndex == 3)
+                {
+                    t.GetComponent<Image>().sprite = myTypeDSprite;
+                }
+                if (myCurrentUpgradeReplaceSelected == null)
                 {
                     myCurrentUpgradeReplaceSelected = myUpgradesInventory[i];
                     myCurrentUpgradeReplaceTransformSelected = t;
