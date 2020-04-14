@@ -24,6 +24,7 @@ public class UpgradesManager : MonoBehaviour
         myUpgrades = new List<Upgrade>();
         myUpgrades.Add(new MomentumBooster());
         myUpgrades.Add(new OverampedBiceps());
+        myUpgrades.Add(new DashThrusters());
     }
 
     public Upgrade GetUpgrade(int anIndex)

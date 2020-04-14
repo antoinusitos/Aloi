@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
@@ -42,6 +43,7 @@ public class PlayerInventory : MonoBehaviour
     private Upgrade myCurrentUpgradeSelected = null;
 
     private int myUpgradeIndex = 0;
+    private int myUpgradeCategoryIndex = 0;
 
     private Transform myCurrentUpgradeReplaceTransformSelected = null;
     private Upgrade myCurrentUpgradeReplaceSelected = null;
@@ -67,6 +69,11 @@ public class PlayerInventory : MonoBehaviour
 
     [SerializeField]
     private Text myReplaceChipDescText = null;
+
+    [SerializeField]
+    private Sprite myTypeASprite = null;
+    [SerializeField]
+    private Sprite myTypeBSprite = null;
 
     private void Start()
     {
@@ -100,7 +107,6 @@ public class PlayerInventory : MonoBehaviour
         {
             if(!myIsReplacing)
             {
-                myIsReplacing = true;
                 if (myCurrentUpgradeTransformSelected != null && myCurrentUpgradeSelected != null)
                 {
                     ShowInventoryChip();
@@ -108,12 +114,19 @@ public class PlayerInventory : MonoBehaviour
             }
             else
             {
+                ReplaceChips();
+            }
+        }
+        else if (Input.GetButtonDown("Cancel"))
+        {
+            if(myIsReplacing)
+            {
                 myIsReplacing = false;
                 HideInventoryChip();
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             if(myIsReplacing)
             {
@@ -176,9 +189,10 @@ public class PlayerInventory : MonoBehaviour
             if(aType[i] != null)
             {
                 Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotAChipsPanel);
+                t.GetComponent<Image>().sprite = myTypeASprite;
                 if(myCurrentUpgradeTransformSelected == null)
                 {
-                    SetUpgradeSelected(t, aType[i], i);
+                    SetUpgradeSelected(t, aType[i], i, 0);
                 }
             }
         }
@@ -189,9 +203,10 @@ public class PlayerInventory : MonoBehaviour
             if (bType[i] != null)
             {
                 Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotBChipsPanel);
+                t.GetComponent<Image>().sprite = myTypeBSprite;
                 if (myCurrentUpgradeTransformSelected == null)
                 {
-                    SetUpgradeSelected(t, bType[i], i);
+                    SetUpgradeSelected(t, bType[i], i, 1);
                 }
             }
         }
@@ -204,7 +219,7 @@ public class PlayerInventory : MonoBehaviour
                 Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotCChipsPanel);
                 if (myCurrentUpgradeTransformSelected == null)
                 {
-                    SetUpgradeSelected(t, cType[i], i);
+                    SetUpgradeSelected(t, cType[i], i, 2);
                 }
             }
         }
@@ -217,10 +232,13 @@ public class PlayerInventory : MonoBehaviour
                 Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotDChipsPanel);
                 if (myCurrentUpgradeTransformSelected == null)
                 {
-                    SetUpgradeSelected(t, dType[i], i);
+                    SetUpgradeSelected(t, dType[i], i, 3);
                 }
             }
         }
+
+        if (myCurrentUpgradeTransformSelected == null)
+            return;
 
         myCurrentUpgradeTransformSelected.GetChild(0).gameObject.SetActive(true);
 
@@ -230,8 +248,97 @@ public class PlayerInventory : MonoBehaviour
         myWattSlider.value = (float)myPlayerStats.GetCurrentWatt() / myPlayerStats.GetMaxWatt();
     }
 
-    private void SetUpgradeSelected(Transform aTransform, Upgrade anUpgrade, int anIndex)
+    private void ReplaceChips()
     {
+        if (myUpgradeCategoryIndex == 0)
+        {
+            Upgrade[] upgrades = myPlayerUpgrades.GetTypeAUpgrades();
+            for (int i = 0; i < upgrades.Length; i++)
+            {
+                if (upgrades[i] == myCurrentUpgradeSelected)
+                {
+                    myPlayerUpgrades.SetUpgradeTypeA(myCurrentUpgradeReplaceSelected, i);
+                    for (int j = 0; j < myUpgradesInventory.Count; j++)
+                    {
+                        if (myUpgradesInventory[j] == myCurrentUpgradeReplaceSelected)
+                        {
+                            myUpgradesInventory[j] = myCurrentUpgradeSelected;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        else if (myUpgradeCategoryIndex == 1)
+        {
+            Upgrade[] upgrades = myPlayerUpgrades.GetTypeBUpgrades();
+            for (int i = 0; i < upgrades.Length; i++)
+            {
+                if (upgrades[i] == myCurrentUpgradeSelected)
+                {
+                    myPlayerUpgrades.SetUpgradeTypeB(myCurrentUpgradeReplaceSelected, i);
+                    for (int j = 0; j < myUpgradesInventory.Count; j++)
+                    {
+                        if (myUpgradesInventory[j] == myCurrentUpgradeReplaceSelected)
+                        {
+                            myUpgradesInventory[j] = myCurrentUpgradeSelected;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        else if (myUpgradeCategoryIndex == 2)
+        {
+            Upgrade[] upgrades = myPlayerUpgrades.GetTypeCUpgrades();
+            for (int i = 0; i < upgrades.Length; i++)
+            {
+                if (upgrades[i] == myCurrentUpgradeSelected)
+                {
+                    myPlayerUpgrades.SetUpgradeTypeC(myCurrentUpgradeReplaceSelected, i);
+                    for (int j = 0; j < myUpgradesInventory.Count; j++)
+                    {
+                        if (myUpgradesInventory[j] == myCurrentUpgradeReplaceSelected)
+                        {
+                            myUpgradesInventory[j] = myCurrentUpgradeSelected;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        else if (myUpgradeCategoryIndex == 3)
+        {
+            Upgrade[] upgrades = myPlayerUpgrades.GetTypeDUpgrades();
+            for (int i = 0; i < upgrades.Length; i++)
+            {
+                if (upgrades[i] == myCurrentUpgradeSelected)
+                {
+                    myPlayerUpgrades.SetUpgradeTypeD(myCurrentUpgradeReplaceSelected, i);
+                    for (int j = 0; j < myUpgradesInventory.Count; j++)
+                    {
+                        if (myUpgradesInventory[j] == myCurrentUpgradeReplaceSelected)
+                        {
+                            myUpgradesInventory[j] = myCurrentUpgradeSelected;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        Upgrade temp = myCurrentUpgradeSelected;
+        myCurrentUpgradeSelected = myCurrentUpgradeReplaceSelected;
+        myCurrentUpgradeReplaceSelected = temp;
+
+        HideInventoryChip();
+        SetUpgradeSelected(myCurrentUpgradeTransformSelected, myCurrentUpgradeSelected, myUpgradeIndex, myUpgradeCategoryIndex);
+    }
+
+    private void SetUpgradeSelected(Transform aTransform, Upgrade anUpgrade, int anIndex, int aCategoryIndex)
+    {
+        myUpgradeCategoryIndex = aCategoryIndex;
+
         myCurrentUpgradeTransformSelected = aTransform;
         myCurrentUpgradeSelected = anUpgrade;
         myUpgradeIndex = anIndex;
@@ -242,8 +349,6 @@ public class PlayerInventory : MonoBehaviour
 
     private void ShowInventoryChip()
     {
-        myReplaceChipDescriptionObject.SetActive(true);
-
         myInventoryChipsObject.SetActive(true);
 
         for (int i = 0; i < myInventoryChipsPanel.childCount; i++)
@@ -251,10 +356,19 @@ public class PlayerInventory : MonoBehaviour
             Destroy(myInventoryChipsPanel.GetChild(i).gameObject);
         }
 
+        UpgradeType typeSeached = UpgradeType.TYPEA;
+        if (myUpgradeCategoryIndex == 1)
+            typeSeached = UpgradeType.TYPEB;
+        else if (myUpgradeCategoryIndex == 2)
+            typeSeached = UpgradeType.TYPEC;
+        else if (myUpgradeCategoryIndex == 3)
+            typeSeached = UpgradeType.TYPED;
+
         for (int i = 0; i < myUpgradesInventory.Count; i++)
         {
-            if (myUpgradesInventory[i] != null)
+            if (myUpgradesInventory[i] != null && myUpgradesInventory[i].GetMyType() == typeSeached)
             {
+                myIsReplacing = true;
                 Transform t = Instantiate(myInventoryChipsItemPrefab, myInventoryChipsPanel);
                 if(myCurrentUpgradeReplaceSelected == null)
                 {
@@ -262,6 +376,8 @@ public class PlayerInventory : MonoBehaviour
                     myCurrentUpgradeReplaceTransformSelected = t;
                     myCurrentUpgradeReplaceTransformSelected.GetChild(0).gameObject.SetActive(true);
                     myUpgradeReplaceIndex = i;
+
+                    myReplaceChipDescriptionObject.SetActive(true);
 
                     myReplaceChipNameText.text = myCurrentUpgradeReplaceSelected.GetName();
                     myReplaceChipDescText.text = myCurrentUpgradeReplaceSelected.GetDescription();
@@ -275,37 +391,198 @@ public class PlayerInventory : MonoBehaviour
         myReplaceChipDescriptionObject.SetActive(false);
 
         myInventoryChipsObject.SetActive(false);
+
+        myCurrentUpgradeReplaceTransformSelected = null;
+        myCurrentUpgradeReplaceSelected = null;
+
+        myIsReplacing = false;
     }
 
     private void MoveSelectCursor(bool aMoveRight)
     {
-        bool found = false;
+        Upgrade[] upgrades = null;
 
-        if (aMoveRight && myPlayerUpgrades.GetTypeBUpgrades().Length - 1 > myUpgradeIndex)
+        if(myUpgradeCategoryIndex == 0)
         {
-            myUpgradeIndex++;
-            found = true;
+            upgrades = myPlayerUpgrades.GetTypeAUpgrades();
+
+            if (aMoveRight)
+            {
+                if ((myUpgradeIndex == 1 || myUpgradeIndex == 3) && upgrades[myUpgradeIndex - 1] != null)
+                {
+                    myUpgradeIndex--;
+                }
+                else
+                {
+                    ChangeSelectedCategory(out upgrades, 1);
+                }
+            }
+            else
+            {
+                if ((myUpgradeIndex == 0 || myUpgradeIndex == 2) && upgrades[myUpgradeIndex + 1] != null)
+                {
+                    myUpgradeIndex++;
+                }
+            }
+
         }
-        else if (!aMoveRight && myUpgradeIndex > 0)
+        else if (myUpgradeCategoryIndex == 1)
         {
-            myUpgradeIndex--;
-            found = true;
+            upgrades = myPlayerUpgrades.GetTypeBUpgrades();
+            if (!aMoveRight)
+            {
+                if ((myUpgradeIndex == 1 || myUpgradeIndex == 3) && upgrades[myUpgradeIndex - 1] != null)
+                {
+                    myUpgradeIndex--;
+                }
+                else
+                {
+                    ChangeSelectedCategory(out upgrades, -1);
+                }
+            }
+            else
+            {
+                if ((myUpgradeIndex == 0 || myUpgradeIndex == 2) && upgrades[myUpgradeIndex + 1] != null)
+                {
+                    myUpgradeIndex++;
+                }
+            }
+        }
+        else if (myUpgradeCategoryIndex == 2)
+        {
+            upgrades = myPlayerUpgrades.GetTypeCUpgrades();
+            if (aMoveRight)
+            {
+                if ((myUpgradeIndex == 1 || myUpgradeIndex == 3) && upgrades[myUpgradeIndex - 1] != null)
+                {
+                    myUpgradeIndex--;
+                }
+                else
+                {
+                    ChangeSelectedCategory(out upgrades, 1);
+                }
+            }
+            else
+            {
+                if ((myUpgradeIndex == 0 || myUpgradeIndex == 2) && upgrades[myUpgradeIndex + 1] != null)
+                {
+                    myUpgradeIndex++;
+                }
+            }
+        }
+        else if (myUpgradeCategoryIndex == 3)
+        {
+            upgrades = myPlayerUpgrades.GetTypeDUpgrades();
+            if (!aMoveRight)
+            {
+                if ((myUpgradeIndex == 1 || myUpgradeIndex == 3) && upgrades[myUpgradeIndex - 1] != null)
+                {
+                    myUpgradeIndex--;
+                }
+                else
+                {
+                    ChangeSelectedCategory(out upgrades, -1);
+                }
+            }
+            else
+            {
+                if ((myUpgradeIndex == 0 || myUpgradeIndex == 2) && upgrades[myUpgradeIndex + 1] != null)
+                {
+                    myUpgradeIndex++;
+                }
+            }
         }
 
-        if (found)
-        {
-            myCurrentUpgradeTransformSelected.GetChild(0).gameObject.SetActive(false);
-            myCurrentUpgradeSelected = myPlayerUpgrades.GetTypeBUpgrades()[myUpgradeIndex];
-            myCurrentUpgradeTransformSelected = mySlotBChipsPanel.GetChild(myUpgradeIndex);
-            myCurrentUpgradeTransformSelected.GetChild(0).gameObject.SetActive(true);
+        myCurrentUpgradeTransformSelected.GetChild(0).gameObject.SetActive(false);
+        myCurrentUpgradeSelected = upgrades[myUpgradeIndex];
 
-            mySelectedChipNameText.text = myCurrentUpgradeSelected.GetName();
-            mySelectedChipDescText.text = myCurrentUpgradeSelected.GetDescription();
+        Transform slot = mySlotAChipsPanel;
+        if (myUpgradeCategoryIndex == 1)
+        {
+            slot = mySlotBChipsPanel;
+        }
+        else if (myUpgradeCategoryIndex == 2)
+        {
+            slot = mySlotCChipsPanel;
+        }
+        else if (myUpgradeCategoryIndex == 3)
+        {
+            slot = mySlotDChipsPanel;
+        }
+
+        myCurrentUpgradeTransformSelected = slot.GetChild(myUpgradeIndex);
+        myCurrentUpgradeTransformSelected.GetChild(0).gameObject.SetActive(true);
+
+        mySelectedChipNameText.text = myCurrentUpgradeSelected.GetName();
+        mySelectedChipDescText.text = myCurrentUpgradeSelected.GetDescription();
+    }
+
+    private void ChangeSelectedCategory(out Upgrade[] someUpgrade, int aSens)
+    {
+        if(aSens == 1 && (myUpgradeCategoryIndex == 1 || myUpgradeCategoryIndex == 3))
+        {
+            someUpgrade = myUpgradeCategoryIndex == 1 ? myPlayerUpgrades.GetTypeBUpgrades() : myPlayerUpgrades.GetTypeDUpgrades();
+            return;
+        }
+        else if (aSens == -1 && (myUpgradeCategoryIndex == 0 || myUpgradeCategoryIndex == 2))
+        {
+            someUpgrade = myUpgradeCategoryIndex == 0 ? myPlayerUpgrades.GetTypeAUpgrades() : myPlayerUpgrades.GetTypeCUpgrades();
+            return;
+        }
+
+        int categoryTemp = myUpgradeCategoryIndex + aSens;
+        Upgrade[] temp = null;
+
+        if (categoryTemp == 0)
+        {
+            temp = myPlayerUpgrades.GetTypeAUpgrades();
+        }
+        else if (categoryTemp == 1)
+        {
+            temp = myPlayerUpgrades.GetTypeBUpgrades();
+        }
+        else if (categoryTemp == 2)
+        {
+            temp = myPlayerUpgrades.GetTypeCUpgrades();
+        }
+        else if (categoryTemp == 3)
+        {
+            temp = myPlayerUpgrades.GetTypeDUpgrades();
+        }
+
+        if(temp[0] == null)
+        {
+            if (aSens == 1 && (categoryTemp == 1 || categoryTemp == 3))
+            {
+                someUpgrade = categoryTemp == 1 ? myPlayerUpgrades.GetTypeBUpgrades() : myPlayerUpgrades.GetTypeDUpgrades();
+                return;
+            }
+            else if (aSens == -1 && (categoryTemp == 0 || categoryTemp == 2))
+            {
+                someUpgrade = categoryTemp == 0 ? myPlayerUpgrades.GetTypeAUpgrades() : myPlayerUpgrades.GetTypeCUpgrades();
+                return;
+            }
+            else
+            {
+                someUpgrade = null;
+                Debug.LogError("Out of Scope", this);
+            }
+        }
+        else
+        {
+            myUpgradeIndex = 0;
+            myUpgradeCategoryIndex = categoryTemp;
+            someUpgrade = temp;
         }
     }
 
     private void MoveReplaceCursor(bool aMoveRight)
     {
+        if(myCurrentUpgradeReplaceTransformSelected == null)
+        {
+            return;
+        }
+
         bool found = false;
 
         if (aMoveRight && myUpgradesInventory.Count - 1 > myUpgradeReplaceIndex)

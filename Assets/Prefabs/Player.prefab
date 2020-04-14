@@ -1404,7 +1404,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Downward dashes create a deflagration when hitting a platform.\r"
+  m_Text: DESC
 --- !u!1 &595380982
 GameObject:
   m_ObjectHideFlags: 0
@@ -3107,7 +3107,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Momentum Torch
+  m_Text: NAME
 --- !u!1 &1728240486
 GameObject:
   m_ObjectHideFlags: 0
@@ -4621,6 +4621,8 @@ MonoBehaviour:
   mySelectedChipDescText: {fileID: 584017181}
   myReplaceChipNameText: {fileID: 2123415966}
   myReplaceChipDescText: {fileID: 1102034675}
+  myTypeASprite: {fileID: 21300000, guid: d61baff9a61027d4ba7872ff015d574c, type: 3}
+  myTypeBSprite: {fileID: 21300000, guid: 371eb209ac01d6142829d4356f4ceedc, type: 3}
 --- !u!1 &3843930227950376054
 GameObject:
   m_ObjectHideFlags: 0
