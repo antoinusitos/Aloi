@@ -24,8 +24,8 @@ public class PlayerStats : MonoBehaviour
 
     private int myExperience = 2165;
 
-    private int myMaxWatt = 420;
-    private int myCurrentWatt = 365;
+    private int myMaxWatt = 200;
+    private int myCurrentWatt = 0;
 
     [SerializeField]
     private Animator myAnimator = null;
@@ -122,5 +122,10 @@ public class PlayerStats : MonoBehaviour
     public int GetCurrentWatt()
     {
         return myCurrentWatt;
+    }
+
+    public void AddCurrentWatt(int aValue)
+    {
+        myCurrentWatt += aValue;
     }
 }

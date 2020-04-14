@@ -7,6 +7,8 @@ public class DashThrusters : Upgrade
         myUpgradeName = "Dash Thrusters";
         myUpgradeDescription = "Adds a small knockback to any enemy hit by a dash, pushing them up to 1m away";
         myUpgradeType = UpgradeType.TYPEA;
+        myHeatValue = 15;
+        myWattValue = 70;
     }
 
     public override void UseUpgrade(Player aPlayer)

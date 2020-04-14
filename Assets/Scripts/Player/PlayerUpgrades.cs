@@ -28,12 +28,11 @@ public class PlayerUpgrades : MonoBehaviour
     {
         myTypeASlots[0] = new DashThrusters();
         myTypeASlots[0].AddUpgrade(myPlayer);
+        myPlayer.GetPlayerStats().AddCurrentWatt(myTypeASlots[0].GetWatt());
 
         myTypeBSlots[0] = new MomentumBooster();
         myTypeBSlots[0].AddUpgrade(myPlayer);
-
-        myTypeBSlots[1] = new OverampedBiceps();
-        myTypeBSlots[1].AddUpgrade(myPlayer);
+        myPlayer.GetPlayerStats().AddCurrentWatt(myTypeBSlots[0].GetWatt());
     }
 
     public void UseAbility(UpgradeType anUpgradeType)

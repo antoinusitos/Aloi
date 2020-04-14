@@ -9,6 +9,8 @@ public class MomentumBooster : Upgrade
         myUpgradeName = "Momemtum Booster";
         myUpgradeDescription = "Dashing downwards creates a deflagration when hitting a platform.";
         myUpgradeType = UpgradeType.TYPEB;
+        myHeatValue = 0;
+        myWattValue = 90;
     }
 
     public override void UseUpgrade(Player aPlayer)

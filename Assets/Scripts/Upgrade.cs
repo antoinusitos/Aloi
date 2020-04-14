@@ -14,6 +14,8 @@ public class Upgrade
 
     protected string myUpgradeName = "Simple Name";
     protected string myUpgradeDescription = "Simple Description";
+    protected int myWattValue = 0;
+    protected int myHeatValue = 0;
 
     public virtual void UseUpgrade(Player aPlayer)
     {
@@ -43,5 +45,15 @@ public class Upgrade
     public UpgradeType GetMyType()
     {
         return myUpgradeType;
+    }
+
+    public int GetHeat()
+    {
+        return myHeatValue;
+    }
+
+    public int GetWatt()
+    {
+        return myWattValue;
     }
 }

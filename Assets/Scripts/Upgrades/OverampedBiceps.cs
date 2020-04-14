@@ -10,6 +10,8 @@ public class OverampedBiceps : Upgrade
         myUpgradeName = "Overamped Biceps";
         myUpgradeDescription = "Moving Faster.";
         myUpgradeType = UpgradeType.TYPEB;
+        myHeatValue = 0;
+        myWattValue = 50;
     }
 
     public override void UseUpgrade(Player aPlayer)

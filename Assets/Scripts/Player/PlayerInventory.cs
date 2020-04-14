@@ -65,10 +65,22 @@ public class PlayerInventory : MonoBehaviour
     private Text mySelectedChipDescText = null;
 
     [SerializeField]
+    private Text mySelectedChipHeatText = null;
+
+    [SerializeField]
+    private Text mySelectedChipWattText = null;
+
+    [SerializeField]
     private Text myReplaceChipNameText = null;
 
     [SerializeField]
     private Text myReplaceChipDescText = null;
+
+    [SerializeField]
+    private Text myReplaceChipHeatText = null;
+
+    [SerializeField]
+    private Text myReplaceChipWattText = null;
 
     [SerializeField]
     private Sprite myTypeASprite = null;
@@ -83,7 +95,6 @@ public class PlayerInventory : MonoBehaviour
     {
         myPlayerUpgrades = GetComponent<PlayerUpgrades>();
         myPlayerStats = GetComponent<PlayerStats>();
-        myUpgradesInventory.Add(UpgradesManager.GetInstance().GetUpgrade(0));
         myUpgradesInventory.Add(UpgradesManager.GetInstance().GetUpgrade(1));
     }
 
@@ -331,12 +342,18 @@ public class PlayerInventory : MonoBehaviour
             }
         }
 
+        myPlayerStats.AddCurrentWatt(-myCurrentUpgradeSelected.GetWatt());
+        myPlayerStats.AddCurrentWatt(myCurrentUpgradeReplaceSelected.GetWatt());
+
         Upgrade temp = myCurrentUpgradeSelected;
         myCurrentUpgradeSelected = myCurrentUpgradeReplaceSelected;
         myCurrentUpgradeReplaceSelected = temp;
 
         HideInventoryChip();
         SetUpgradeSelected(myCurrentUpgradeTransformSelected, myCurrentUpgradeSelected, myUpgradeIndex, myUpgradeCategoryIndex);
+
+        myCurrentWattText.text = "<b>" + myPlayerStats.GetCurrentWatt().ToString() + "</b> / " + myPlayerStats.GetMaxWatt().ToString();
+        myWattSlider.value = (float)myPlayerStats.GetCurrentWatt() / myPlayerStats.GetMaxWatt();
     }
 
     private void SetUpgradeSelected(Transform aTransform, Upgrade anUpgrade, int anIndex, int aCategoryIndex)
@@ -349,6 +366,8 @@ public class PlayerInventory : MonoBehaviour
 
         mySelectedChipNameText.text = myCurrentUpgradeSelected.GetName();
         mySelectedChipDescText.text = myCurrentUpgradeSelected.GetDescription();
+        mySelectedChipHeatText.text = myCurrentUpgradeSelected.GetHeat().ToString();
+        mySelectedChipWattText.text = myCurrentUpgradeSelected.GetWatt().ToString();
     }
 
     private void ShowInventoryChip()
@@ -397,6 +416,8 @@ public class PlayerInventory : MonoBehaviour
 
                     myReplaceChipNameText.text = myCurrentUpgradeReplaceSelected.GetName();
                     myReplaceChipDescText.text = myCurrentUpgradeReplaceSelected.GetDescription();
+                    myReplaceChipHeatText.text = myCurrentUpgradeReplaceSelected.GetHeat().ToString();
+                    myReplaceChipWattText.text = myCurrentUpgradeReplaceSelected.GetWatt().ToString();
                 }
             }
         }
@@ -529,8 +550,7 @@ public class PlayerInventory : MonoBehaviour
         myCurrentUpgradeTransformSelected = slot.GetChild(myUpgradeIndex);
         myCurrentUpgradeTransformSelected.GetChild(0).gameObject.SetActive(true);
 
-        mySelectedChipNameText.text = myCurrentUpgradeSelected.GetName();
-        mySelectedChipDescText.text = myCurrentUpgradeSelected.GetDescription();
+        SetUpgradeSelected(myCurrentUpgradeTransformSelected, myCurrentUpgradeSelected, myUpgradeIndex, myUpgradeCategoryIndex);
     }
 
     private void ChangeSelectedCategory(out Upgrade[] someUpgrade, int aSens)
@@ -621,6 +641,8 @@ public class PlayerInventory : MonoBehaviour
 
             myReplaceChipNameText.text = myCurrentUpgradeReplaceSelected.GetName();
             myReplaceChipDescText.text = myCurrentUpgradeReplaceSelected.GetDescription();
+            myReplaceChipHeatText.text = myCurrentUpgradeReplaceSelected.GetHeat().ToString();
+            myReplaceChipWattText.text = myCurrentUpgradeReplaceSelected.GetWatt().ToString();
         }
     }
 }
