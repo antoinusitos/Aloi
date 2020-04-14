@@ -21,14 +21,26 @@ public class MovingBackAndForth : MonoBehaviour
 
     private bool myCanMove = true;
 
+    private Enemy myEnemy = null;
+
     private void Start()
     {
         myRigidbody2D = GetComponent<Rigidbody2D>();
     }
 
+    public void SetEnemy(Enemy aNewEnemy)
+    {
+        myEnemy = aNewEnemy;
+    }
+
     private void FixedUpdate()
     {
         if(!myCanMove)
+        {
+            return;
+        }
+
+        if(myEnemy.GetEnemyState() == EnemyState.KNOCKED)
         {
             return;
         }

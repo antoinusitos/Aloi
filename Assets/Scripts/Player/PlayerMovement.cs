@@ -42,6 +42,10 @@ public class PlayerMovement : MonoBehaviour
 
     private float mySpeedBonus = 0f;
 
+    private bool myIsBlocked = false;
+
+    private bool myCanGoThroughEnemies = false;
+
     private void Awake()
     {
         myRigidbody2D = GetComponent<Rigidbody2D>();
@@ -50,12 +54,22 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if(myIsBlocked)
+        {
+            return;
+        }
+        
+        myAnimator.SetFloat("Speed", myRigidbody2D.velocity.x < 0 ? myRigidbody2D.velocity.x * -1 : myRigidbody2D.velocity.x);
+
+        if (!myCanMove)
+        {
+            return;
+        }
+
         myStickDirection.x = Input.GetAxis("Horizontal");
         myStickDirection.y = Input.GetAxis("Vertical");
 
         myIsGrounded = myTestGroundCheck.IsTouchingLayers(LayerMask.GetMask("GroundCheck"));
-
-        myAnimator.SetFloat("Speed", myRigidbody2D.velocity.x < 0 ? myRigidbody2D.velocity.x * -1 : myRigidbody2D.velocity.x);
 
         if (myRigidbody2D.velocity.x != 0)
         {
@@ -65,12 +79,7 @@ public class PlayerMovement : MonoBehaviour
 
             mySpritePivot.localScale = spriteDir;
         }
-
-        if (!myCanMove)
-        {
-            return;
-        }
-
+        
         if(myIsGrounded)
         {
             myCanDash = true;
@@ -86,7 +95,8 @@ public class PlayerMovement : MonoBehaviour
             myCanDash = false;
             myIsDashing = true;
             myCurrentDashTime = myDashTime;
-            gameObject.layer = 12;
+            if(myCanGoThroughEnemies)
+                gameObject.layer = 12;
             myDashDirection = myStickDirection;
         }
 
@@ -95,9 +105,20 @@ public class PlayerMovement : MonoBehaviour
             myCurrentDashTime -= Time.deltaTime;
             if(myCurrentDashTime <= 0)
             {
+                myCurrentDashTime = 0;
                 gameObject.layer = 10;
                 myIsDashing = false;
             }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(!myCanGoThroughEnemies && myIsDashing)
+        {
+            gameObject.layer = 10;
+            myIsDashing = false;
+            myCurrentDashTime = 0;
         }
     }
 
@@ -113,7 +134,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!myCanMove)
+        if (myIsBlocked)
+        {
+            return;
+        }
+
+        if (!myCanMove && myRigidbody2D.velocity != Vector2.zero)
         {
             Vector3 targetVelocity = new Vector2(0.0f, myRigidbody2D.velocity.y);
             myRigidbody2D.velocity = Vector3.SmoothDamp(myRigidbody2D.velocity, targetVelocity, ref myVelocity, 0.5f);
@@ -145,5 +171,11 @@ public class PlayerMovement : MonoBehaviour
     public void SetCanMove(bool aNewState)
     {
         myCanMove = aNewState;
+    }
+
+    public void Block(bool aNewState)
+    {
+        myIsBlocked = aNewState;
+        myRigidbody2D.velocity = Vector2.zero;
     }
 }

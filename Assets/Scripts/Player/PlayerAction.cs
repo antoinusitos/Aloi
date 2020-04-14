@@ -18,6 +18,12 @@ public class PlayerAction : MonoBehaviour
 
     private float myPunchDamageBonus = 0;
 
+    private float myTimeToHit = 0.51f; //this is the length of the animation for now
+
+    private float myCurrentTimeToHit = 0;
+
+    private float myTimeToCancel = 0.2f;
+
     [SerializeField]
     private Animator myAnimator = null;
 
@@ -28,6 +34,8 @@ public class PlayerAction : MonoBehaviour
 
     [SerializeField]
     private HitBox myHitBox = null;
+
+    private Coroutine myPunchCoroutine = null;
 
     private void Start()
     {
@@ -78,14 +86,38 @@ public class PlayerAction : MonoBehaviour
         else if (Input.GetButtonDown("Punch") && !myIsPunching && canPunch)
         {
             myPlayerStats.AddHeat(myPunchHeat + myPunchHeat * myPunchHeatMalus);
-            StartCoroutine("IE_Punch");
+            if(myPunchCoroutine != null)
+                StopCoroutine(myPunchCoroutine);
+            myPunchCoroutine = StartCoroutine("IE_Punch");
         }
+
+        if(myIsPunching)
+        {
+            myCurrentTimeToHit += Time.deltaTime;
+            if(myCurrentTimeToHit >= myTimeToHit)
+            {
+                myCurrentTimeToHit = 0;
+                myPlayerMovement.Block(false);
+                myIsPunching = false;
+            }
+        }
+    }
+
+    public void TryCancelPunch()
+    {
+        if (myCurrentTimeToHit > myTimeToCancel)
+            return;
+
+        StopCoroutine(myPunchCoroutine);
+        myPlayerMovement.SetCanMove(true);
+        myIsPunching = false;
+        myCurrentTimeToHit = 0;
     }
 
     private IEnumerator IE_Punch()
     {
         myIsPunching = true;
-        myPlayerMovement.SetCanMove(false);
+        myPlayerMovement.Block(true);
         myAnimator.SetTrigger("Punch");
 
         List<Enemy> enemies = myHitBox.GetCollidingObjects();
@@ -94,12 +126,9 @@ public class PlayerAction : MonoBehaviour
 
         for (int i = 0; i < enemies.Count; i++)
         {
-            Destroy(enemies[i].gameObject);
+            enemies[i].GetEnemyLife().RemoveLife(myPunchDamage);
         }
 
         yield return new WaitForSeconds(myPunchAnimation.length / 2.0f);
-
-        myPlayerMovement.SetCanMove(true);
-        myIsPunching = false;
     }
 }

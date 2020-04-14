@@ -16,9 +16,18 @@ public class EnemyHitBox : MonoBehaviour
 
     private PlayerStats myPlayerTarget = null;
 
+    private Enemy myEnemy = null;
+
+    private Coroutine myAttackCoroutine = null;
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if(myIsPunching)
+        {
+            return;
+        }
+
+        if(myEnemy.GetEnemyState() == EnemyState.KNOCKED)
         {
             return;
         }
@@ -27,8 +36,9 @@ public class EnemyHitBox : MonoBehaviour
         if(playerStats != null && playerStats.GetCurrentLife() > 0)
         {
             myPlayerTarget = playerStats;
-            StopCoroutine("IE_Punch");
-            StartCoroutine("IE_Punch");
+            if(myAttackCoroutine != null)
+                StopCoroutine(myAttackCoroutine);
+            myAttackCoroutine = StartCoroutine("IE_Punch");
         }
     }
 
@@ -39,6 +49,20 @@ public class EnemyHitBox : MonoBehaviour
         {
             myPlayerTarget = null;
         }
+    }
+
+    public void SetEnemy(Enemy aNewEnemy)
+    {
+        myEnemy = aNewEnemy;
+    }
+
+    public void StopAttack()
+    {
+        if (myAttackCoroutine != null)
+            StopCoroutine(myAttackCoroutine);
+        myAnimator.SetTrigger("StopAttack");
+        myIsPunching = false;
+        myAnimator.ResetTrigger("Attack");
     }
 
     private IEnumerator IE_Punch()
