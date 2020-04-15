@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
@@ -91,6 +92,9 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField]
     private Sprite myTypeDSprite = null;
 
+    private bool myCanModify = false;
+    private bool myInWorkbench = false;
+
     private void Start()
     {
         myPlayerUpgrades = GetComponent<PlayerUpgrades>();
@@ -100,7 +104,7 @@ public class PlayerInventory : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetButtonDown("Inventory"))
+        if(!myInWorkbench && Input.GetButtonDown("Inventory"))
         {
             myInventoryOpen = !myInventoryOpen;
             myInventory.SetActive(myInventoryOpen);
@@ -118,7 +122,7 @@ public class PlayerInventory : MonoBehaviour
         if (!myInventoryOpen)
             return;
 
-        if(Input.GetButtonDown("Jump"))
+        if(myCanModify && Input.GetButtonDown("Jump"))
         {
             if(!myIsReplacing)
             {
@@ -132,7 +136,7 @@ public class PlayerInventory : MonoBehaviour
                 ReplaceChips();
             }
         }
-        else if (Input.GetButtonDown("Cancel"))
+        else if (myCanModify && Input.GetButtonDown("Cancel"))
         {
             if(myIsReplacing)
             {
@@ -644,5 +648,19 @@ public class PlayerInventory : MonoBehaviour
             myReplaceChipHeatText.text = myCurrentUpgradeReplaceSelected.GetHeat().ToString();
             myReplaceChipWattText.text = myCurrentUpgradeReplaceSelected.GetWatt().ToString();
         }
+    }
+
+    public void SetInWorkBench(bool aNewState)
+    {
+        myCanModify = aNewState;
+        myInWorkbench = aNewState;
+
+        myInventoryOpen = aNewState;
+        myInventory.SetActive(aNewState);
+
+        if (aNewState)
+            UpdateInventory();
+        else
+            CloseInventory();
     }
 }

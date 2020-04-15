@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class PlayerAction : MonoBehaviour
 {
-    private PlayerMovement myPlayerMovement = null;
-
-    private PlayerStats myPlayerStats = null;
-
-    private PlayerUpgrades myPlayerUpgrades = null;
+    private Player myPlayer = null;
 
     private float myPunchHeat = 5.0f;
 
@@ -37,11 +33,12 @@ public class PlayerAction : MonoBehaviour
 
     private Coroutine myPunchCoroutine = null;
 
+    private bool myCanOpenWorkbench = false;
+    private bool myIsInWorkbench = false;
+
     private void Start()
     {
-        myPlayerMovement = GetComponent<PlayerMovement>();
-        myPlayerStats = GetComponent<PlayerStats>();
-        myPlayerUpgrades = GetComponent<PlayerUpgrades>();
+        myPlayer = GetComponent<Player>();
     }
 
     public void AddDamageBonus(float aBonus)
@@ -66,38 +63,48 @@ public class PlayerAction : MonoBehaviour
 
     private void Update()
     {
-        bool canPunch = myPlayerStats.GetCurrentHeat() + myPunchHeat + myPunchHeat * myPunchHeatMalus <= myPlayerStats.GetMaxHeat() ? true : false;
+        bool canPunch = myPlayer.GetPlayerStats().GetCurrentHeat() + myPunchHeat + myPunchHeat * myPunchHeatMalus <= myPlayer.GetPlayerStats().GetMaxHeat() ? true : false;
 
         if (Input.GetButton("Ability"))
         {
             if (Input.GetButtonDown("Punch"))
             {
-                myPlayerUpgrades.UseAbility(UpgradeType.TYPEC);
+                myPlayer.GetPlayerUpgrades().UseAbility(UpgradeType.TYPEC);
             }
             else if (Input.GetButtonDown("Dash"))
             {
-                myPlayerUpgrades.UseAbility(UpgradeType.TYPEB);
+                myPlayer.GetPlayerUpgrades().UseAbility(UpgradeType.TYPEB);
             }
             else if (Input.GetButtonDown("Jump"))
             {
-                myPlayerUpgrades.UseAbility(UpgradeType.TYPEA);
+                myPlayer.GetPlayerUpgrades().UseAbility(UpgradeType.TYPEA);
             }
         }
         else if (Input.GetButtonDown("Punch") && !myIsPunching && canPunch)
         {
-            myPlayerStats.AddHeat(myPunchHeat + myPunchHeat * myPunchHeatMalus);
-            if(myPunchCoroutine != null)
+            myPlayer.GetPlayerStats().AddHeat(myPunchHeat + myPunchHeat * myPunchHeatMalus);
+            if (myPunchCoroutine != null)
                 StopCoroutine(myPunchCoroutine);
             myPunchCoroutine = StartCoroutine("IE_Punch");
         }
+        else if (Input.GetButtonDown("Interact") && myCanOpenWorkbench && !myIsInWorkbench)
+        {
+            myIsInWorkbench = true;
+            myPlayer.GetPlayerInventory().SetInWorkBench(true);
+        }
+        else if (Input.GetButtonDown("Cancel") && myCanOpenWorkbench && myIsInWorkbench)
+        {
+            myIsInWorkbench = false;
+            myPlayer.GetPlayerInventory().SetInWorkBench(false);
+        }
 
-        if(myIsPunching)
+        if (myIsPunching)
         {
             myCurrentTimeToHit += Time.deltaTime;
             if(myCurrentTimeToHit >= myTimeToHit)
             {
                 myCurrentTimeToHit = 0;
-                myPlayerMovement.Block(false);
+                myPlayer.GetPlayerMovement().Block(false);
                 myIsPunching = false;
             }
         }
@@ -109,7 +116,7 @@ public class PlayerAction : MonoBehaviour
             return;
 
         StopCoroutine(myPunchCoroutine);
-        myPlayerMovement.SetCanMove(true);
+        myPlayer.GetPlayerMovement().SetCanMove(true);
         myIsPunching = false;
         myCurrentTimeToHit = 0;
     }
@@ -117,7 +124,7 @@ public class PlayerAction : MonoBehaviour
     private IEnumerator IE_Punch()
     {
         myIsPunching = true;
-        myPlayerMovement.Block(true);
+        myPlayer.GetPlayerMovement().Block(true);
         myAnimator.SetTrigger("Punch");
 
         List<Enemy> enemies = myHitBox.GetCollidingObjects();
@@ -130,5 +137,10 @@ public class PlayerAction : MonoBehaviour
         }
 
         yield return new WaitForSeconds(myPunchAnimation.length / 2.0f);
+    }
+
+    public void SetCanOpenWorkbench(bool aNewState)
+    {
+        myCanOpenWorkbench = aNewState;
     }
 }
