@@ -4,10 +4,10 @@ public class PlayerUpgrades : MonoBehaviour
 {
     private Player myPlayer = null;
 
-    private Upgrade[] myTypeASlots = new Upgrade[2];
-    private Upgrade[] myTypeBSlots = new Upgrade[2];
-    private Upgrade[] myTypeCSlots = new Upgrade[2];
-    private Upgrade[] myTypeDSlots = new Upgrade[4];
+    private Upgrade[] myTypeASlots = new Upgrade[1];
+    private Upgrade[] myTypeBSlots = new Upgrade[1];
+    private Upgrade[] myTypeCSlots = new Upgrade[1];
+    private Upgrade[] myTypeDSlots = new Upgrade[1];
 
     private int myTypeASlotAvalable = 1;
     private int myTypeBSlotAvalable = 1;
@@ -21,7 +21,7 @@ public class PlayerUpgrades : MonoBehaviour
 
     private void Start()
     {
-        Invoke("AddDEBUG", 2.0f);
+        //Invoke("AddDEBUG", 2.0f);
     }
 
     private void AddDEBUG()
@@ -87,4 +87,19 @@ public class PlayerUpgrades : MonoBehaviour
         myTypeDSlots[anIndex] = anUpgrade;
     }
 
+    public int GetSlotAvailable(UpgradeType anUpgradeType)
+    {
+        switch (anUpgradeType)
+        {
+            case UpgradeType.TYPEA:
+                return myTypeASlotAvalable;
+            case UpgradeType.TYPEB:
+                return myTypeBSlotAvalable;
+            case UpgradeType.TYPEC:
+                return myTypeCSlotAvalable;
+            case UpgradeType.TYPED:
+                return myTypeDSlotAvalable;
+        }
+        return 0;
+    }
 }

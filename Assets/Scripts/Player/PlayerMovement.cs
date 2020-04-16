@@ -46,6 +46,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool myCanGoThroughEnemies = false;
 
+    private bool myIsInCinematic = false;
+
     private void Awake()
     {
         myRigidbody2D = GetComponent<Rigidbody2D>();
@@ -62,6 +64,11 @@ public class PlayerMovement : MonoBehaviour
         myAnimator.SetFloat("Speed", myRigidbody2D.velocity.x < 0 ? myRigidbody2D.velocity.x * -1 : myRigidbody2D.velocity.x);
 
         if (!myCanMove)
+        {
+            return;
+        }
+
+        if(myIsInCinematic)
         {
             return;
         }
@@ -139,6 +146,11 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        if (myIsInCinematic)
+        {
+            return;
+        }
+
         if (!myCanMove && myRigidbody2D.velocity != Vector2.zero)
         {
             Vector3 targetVelocity = new Vector2(0.0f, myRigidbody2D.velocity.y);
@@ -171,6 +183,11 @@ public class PlayerMovement : MonoBehaviour
     public void SetCanMove(bool aNewState)
     {
         myCanMove = aNewState;
+    }
+
+    public void SetIsInCinematic(bool aNewState)
+    {
+        myIsInCinematic = aNewState;
     }
 
     public void Block(bool aNewState)

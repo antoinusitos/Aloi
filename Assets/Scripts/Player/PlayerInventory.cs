@@ -60,6 +60,9 @@ public class PlayerInventory : MonoBehaviour
     private GameObject myReplaceChipDescriptionObject = null;
 
     [SerializeField]
+    private GameObject mySelectedChipDescriptionObject = null;
+
+    [SerializeField]
     private Text mySelectedChipNameText = null;
 
     [SerializeField]
@@ -91,6 +94,8 @@ public class PlayerInventory : MonoBehaviour
     private Sprite myTypeCSprite = null;
     [SerializeField]
     private Sprite myTypeDSprite = null;
+    [SerializeField]
+    private Sprite myEmptySprite = null;
 
     private bool myCanModify = false;
     private bool myInWorkbench = false;
@@ -126,7 +131,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if(!myIsReplacing)
             {
-                if (myCurrentUpgradeTransformSelected != null && myCurrentUpgradeSelected != null)
+                if (myCurrentUpgradeTransformSelected != null )
                 {
                     ShowInventoryChip();
                 }
@@ -205,23 +210,23 @@ public class PlayerInventory : MonoBehaviour
         Upgrade[] aType = myPlayerUpgrades.GetTypeAUpgrades();
         for (int i = 0; i < aType.Length; i++)
         {
-            if(aType[i] != null)
+            Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotAChipsPanel);
+            if (myCurrentUpgradeTransformSelected == null)
             {
-                Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotAChipsPanel);
+                SetUpgradeSelected(t, aType[i], i, 0);
+            }
+            if (aType[i] != null)
+            {
                 t.GetComponent<Image>().sprite = myTypeASprite;
-                if(myCurrentUpgradeTransformSelected == null)
-                {
-                    SetUpgradeSelected(t, aType[i], i, 0);
-                }
             }
         }
 
         Upgrade[] bType = myPlayerUpgrades.GetTypeBUpgrades();
         for (int i = 0; i < bType.Length; i++)
         {
+            Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotBChipsPanel);
             if (bType[i] != null)
             {
-                Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotBChipsPanel);
                 t.GetComponent<Image>().sprite = myTypeBSprite;
                 if (myCurrentUpgradeTransformSelected == null)
                 {
@@ -233,9 +238,9 @@ public class PlayerInventory : MonoBehaviour
         Upgrade[] cType = myPlayerUpgrades.GetTypeCUpgrades();
         for (int i = 0; i < cType.Length; i++)
         {
+            Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotCChipsPanel);
             if (cType[i] != null)
             {
-                Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotCChipsPanel);
                 if (myCurrentUpgradeTransformSelected == null)
                 {
                     SetUpgradeSelected(t, cType[i], i, 2);
@@ -246,9 +251,9 @@ public class PlayerInventory : MonoBehaviour
         Upgrade[] dType = myPlayerUpgrades.GetTypeDUpgrades();
         for (int i = 0; i < dType.Length; i++)
         {
+            Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotDChipsPanel);
             if (dType[i] != null)
             {
-                Transform t = Instantiate(myInventoryChipsItemPrefab, mySlotDChipsPanel);
                 if (myCurrentUpgradeTransformSelected == null)
                 {
                     SetUpgradeSelected(t, dType[i], i, 3);
@@ -296,14 +301,14 @@ public class PlayerInventory : MonoBehaviour
                 if (upgrades[i] == myCurrentUpgradeSelected)
                 {
                     myPlayerUpgrades.SetUpgradeTypeB(myCurrentUpgradeReplaceSelected, i);
-                    for (int j = 0; j < myUpgradesInventory.Count; j++)
-                    {
-                        if (myUpgradesInventory[j] == myCurrentUpgradeReplaceSelected)
-                        {
-                            myUpgradesInventory[j] = myCurrentUpgradeSelected;
-                        }
-                    }
                     break;
+                }
+            }
+            for (int j = 0; j < myUpgradesInventory.Count; j++)
+            {
+                if (myUpgradesInventory[j] == myCurrentUpgradeReplaceSelected)
+                {
+                    myUpgradesInventory[j] = myCurrentUpgradeSelected;
                 }
             }
         }
@@ -346,7 +351,8 @@ public class PlayerInventory : MonoBehaviour
             }
         }
 
-        myPlayerStats.AddCurrentWatt(-myCurrentUpgradeSelected.GetWatt());
+        if(myCurrentUpgradeSelected != null)
+            myPlayerStats.AddCurrentWatt(-myCurrentUpgradeSelected.GetWatt());
         myPlayerStats.AddCurrentWatt(myCurrentUpgradeReplaceSelected.GetWatt());
 
         Upgrade temp = myCurrentUpgradeSelected;
@@ -368,10 +374,36 @@ public class PlayerInventory : MonoBehaviour
         myCurrentUpgradeSelected = anUpgrade;
         myUpgradeIndex = anIndex;
 
-        mySelectedChipNameText.text = myCurrentUpgradeSelected.GetName();
-        mySelectedChipDescText.text = myCurrentUpgradeSelected.GetDescription();
-        mySelectedChipHeatText.text = myCurrentUpgradeSelected.GetHeat().ToString();
-        mySelectedChipWattText.text = myCurrentUpgradeSelected.GetWatt().ToString();
+        if (myCurrentUpgradeSelected != null)
+        {
+            mySelectedChipDescriptionObject.SetActive(true);
+            mySelectedChipNameText.text = myCurrentUpgradeSelected.GetName();
+            mySelectedChipDescText.text = myCurrentUpgradeSelected.GetDescription();
+            mySelectedChipHeatText.text = myCurrentUpgradeSelected.GetHeat().ToString();
+            mySelectedChipWattText.text = myCurrentUpgradeSelected.GetWatt().ToString();
+
+            if (myUpgradeCategoryIndex == 0)
+            {
+                myCurrentUpgradeTransformSelected.GetComponent<Image>().sprite = myTypeASprite;
+            }
+            else if (myUpgradeCategoryIndex == 1)
+            {
+                myCurrentUpgradeTransformSelected.GetComponent<Image>().sprite = myTypeBSprite;
+            }
+            else if (myUpgradeCategoryIndex == 2)
+            {
+                myCurrentUpgradeTransformSelected.GetComponent<Image>().sprite = myTypeCSprite;
+            }
+            else if (myUpgradeCategoryIndex == 3)
+            {
+                myCurrentUpgradeTransformSelected.GetComponent<Image>().sprite = myTypeDSprite;
+            }
+        }
+        else
+        {
+            mySelectedChipDescriptionObject.SetActive(false);
+            myCurrentUpgradeTransformSelected.GetComponent<Image>().sprite = myEmptySprite;
+        }
     }
 
     private void ShowInventoryChip()
@@ -397,7 +429,11 @@ public class PlayerInventory : MonoBehaviour
             {
                 myIsReplacing = true;
                 Transform t = Instantiate(myInventoryChipsItemPrefab, myInventoryChipsPanel);
-                if(myUpgradeCategoryIndex == 1)
+                if (myUpgradeCategoryIndex == 0)
+                {
+                    t.GetComponent<Image>().sprite = myTypeASprite;
+                }
+                else if (myUpgradeCategoryIndex == 1)
                 {
                     t.GetComponent<Image>().sprite = myTypeBSprite;
                 }
@@ -449,7 +485,7 @@ public class PlayerInventory : MonoBehaviour
 
             if (aMoveRight)
             {
-                if ((myUpgradeIndex == 1 || myUpgradeIndex == 3) && upgrades[myUpgradeIndex - 1] != null)
+                if ((myUpgradeIndex == 1 || myUpgradeIndex == 3))
                 {
                     myUpgradeIndex--;
                 }
@@ -460,7 +496,7 @@ public class PlayerInventory : MonoBehaviour
             }
             else
             {
-                if ((myUpgradeIndex == 0 || myUpgradeIndex == 2) && upgrades[myUpgradeIndex + 1] != null)
+                if ((myUpgradeIndex == 0 && upgrades.Length > 1) || (myUpgradeIndex == 2 && upgrades.Length > 3))
                 {
                     myUpgradeIndex++;
                 }
@@ -483,7 +519,7 @@ public class PlayerInventory : MonoBehaviour
             }
             else
             {
-                if ((myUpgradeIndex == 0 || myUpgradeIndex == 2) && upgrades[myUpgradeIndex + 1] != null)
+                if ((myUpgradeIndex == 0 && upgrades.Length > 1) || (myUpgradeIndex == 2 && upgrades.Length > 3))
                 {
                     myUpgradeIndex++;
                 }
@@ -505,7 +541,7 @@ public class PlayerInventory : MonoBehaviour
             }
             else
             {
-                if ((myUpgradeIndex == 0 || myUpgradeIndex == 2) && upgrades[myUpgradeIndex + 1] != null)
+                if ((myUpgradeIndex == 0 && upgrades.Length > 1) || (myUpgradeIndex == 2 && upgrades.Length > 3))
                 {
                     myUpgradeIndex++;
                 }
@@ -527,7 +563,7 @@ public class PlayerInventory : MonoBehaviour
             }
             else
             {
-                if ((myUpgradeIndex == 0 || myUpgradeIndex == 2) && upgrades[myUpgradeIndex + 1] != null)
+                if ((myUpgradeIndex == 0 && upgrades.Length > 1) || (myUpgradeIndex == 2 && upgrades.Length > 3))
                 {
                     myUpgradeIndex++;
                 }
@@ -590,7 +626,13 @@ public class PlayerInventory : MonoBehaviour
             temp = myPlayerUpgrades.GetTypeDUpgrades();
         }
 
-        if(temp[0] == null)
+        myUpgradeIndex = 0;
+        myUpgradeCategoryIndex = categoryTemp;
+        someUpgrade = temp;
+
+        return;
+
+        if (temp[0] == null)
         {
             if (aSens == 1 && (categoryTemp == 1 || categoryTemp == 3))
             {

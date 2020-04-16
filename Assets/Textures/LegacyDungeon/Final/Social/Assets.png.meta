@@ -89,6 +89,12 @@ TextureImporter:
   - first:
       213: -5217020059228596425
     second: WallR3
+  - first:
+      213: -320534681844786962
+    second: ChestClosed
+  - first:
+      213: -4664127844389977639
+    second: background4
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -739,7 +745,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -747,6 +753,48 @@ TextureImporter:
       bones: []
       spriteID: 7379797a5eb6997b0800000000000000
       internalID: -5217020059228596425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestClosed
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 513
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee8d276b76b3d8bf0800000000000000
+      internalID: -320534681844786962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: background4
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 256
+        width: 192
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d18028ef60b54fb0800000000000000
+      internalID: -4664127844389977639
       vertices: []
       indices: 
       edges: []
