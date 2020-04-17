@@ -513,6 +513,7 @@ MonoBehaviour:
   myYOffset: 2
   myPlayerVelocityImpactX: 3
   myPlayerVelocityImpactY: 1
+  myDownVisibility: 3
 --- !u!1 &698121230
 GameObject:
   m_ObjectHideFlags: 0
@@ -7300,6 +7301,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3843930227645440377, guid: fbe0670e8be80004188eadd19bd4b2ca,
+        type: 3}
+      propertyPath: myPlayerCamera
+      value: 
+      objectReference: {fileID: 456224596}
     - target: {fileID: 3843930227645440378, guid: fbe0670e8be80004188eadd19bd4b2ca,
         type: 3}
       propertyPath: m_Material

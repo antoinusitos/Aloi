@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Analytics;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,8 +19,10 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 myVelocity = Vector3.zero;
 
-    private bool myIsJumping = false;
     private bool myIsGrounded = false;
+
+    private bool mycanJump = true;
+    private float myTimeToJump = 0;
 
     [SerializeField]
     private Animator myAnimator = null;
@@ -27,18 +30,13 @@ public class PlayerMovement : MonoBehaviour
     private bool myCanMove = true;
 
     private bool myCanDash = true;
+    private float myTimeToDash = 0;
 
     private bool myIsDashing = false;
 
     private Vector2 myStickDirection = Vector2.zero;
 
     private CircleCollider2D myTestGroundCheck = null;
-
-    private float myCurrentDashTime = 0;
-
-    private const float myDashTime = 0.15f;
-
-    private Vector2 myDashDirection = Vector2.zero;
 
     private float mySpeedBonus = 0f;
 
@@ -48,6 +46,13 @@ public class PlayerMovement : MonoBehaviour
 
     private bool myIsInCinematic = false;
 
+    private bool myWallGrabbed = false;
+
+    private float myWallDirection = 0;
+
+    [SerializeField]
+    private PlayerCamera myPlayerCamera = null;
+
     private void Awake()
     {
         myRigidbody2D = GetComponent<Rigidbody2D>();
@@ -56,11 +61,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        if(myIsBlocked)
+        if(!mycanJump)
+        {
+            myTimeToJump += Time.deltaTime;
+        }
+
+        if(!myCanDash)
+        {
+            myTimeToDash += Time.deltaTime;
+        }
+
+        if (myIsBlocked)
         {
             return;
         }
-        
+
+        if (myWallGrabbed)
+        {
+            myRigidbody2D.velocity = Vector2.zero;
+            myRigidbody2D. gravityScale = 0;
+            myWallDirection = mySpritePivot.localScale.x;
+            myAnimator.SetBool("WallGrab", true);
+            myAnimator.SetBool("Jumping", false);
+            myAnimator.SetBool("Falling", false);
+        }
+
         myAnimator.SetFloat("Speed", myRigidbody2D.velocity.x < 0 ? myRigidbody2D.velocity.x * -1 : myRigidbody2D.velocity.x);
 
         if (myRigidbody2D.velocity.y > 0)
@@ -89,10 +114,21 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        myStickDirection.x = Input.GetAxis("Horizontal");
         myStickDirection.y = Input.GetAxis("Vertical");
+        myStickDirection.x = Input.GetAxis("Horizontal");
 
         myIsGrounded = myTestGroundCheck.IsTouchingLayers(LayerMask.GetMask("GroundCheck"));
+
+        if(myStickDirection.x == 0 && myStickDirection.y < 0)
+        {
+            myPlayerCamera.SetWantToSeeUnder(true);
+            myAnimator.SetBool("Crouch", true);
+        }
+        else
+        {
+            myPlayerCamera.SetWantToSeeUnder(false);
+            myAnimator.SetBool("Crouch", false);
+        }
 
         if (myRigidbody2D.velocity.x != 0)
         {
@@ -105,33 +141,37 @@ public class PlayerMovement : MonoBehaviour
         
         if(myIsGrounded)
         {
-            myCanDash = true;
+            if(myTimeToJump >= 0.1f)
+            {
+                myTimeToJump = 0;
+                mycanJump = true;
+            }
+            if(myTimeToDash >= 0.1f)
+            {
+                myTimeToDash = 0;
+                myCanDash = true;
+            }
         }
 
-        if(Input.GetButtonDown("Jump") && myIsGrounded)
+        if(Input.GetButtonDown("Jump") && mycanJump)
         {
-            myIsJumping = true;
+            myRigidbody2D.velocity = Vector2.up * 10.0f;
+            mycanJump = false;
+            myWallGrabbed = false;
+            myAnimator.SetBool("WallGrab", false);
+            myRigidbody2D.gravityScale = 1;
         }
 
         if(Input.GetButtonDown("Dash") && myCanDash && !myIsDashing)
         {
+            myRigidbody2D.gravityScale = 1;
+            myWallGrabbed = false;
+            myAnimator.SetBool("WallGrab", false);
+            mycanJump = false;
             myCanDash = false;
-            myIsDashing = true;
-            myCurrentDashTime = myDashTime;
+            myRigidbody2D.velocity = myStickDirection.normalized * 10.0f;
             if(myCanGoThroughEnemies)
                 gameObject.layer = 12;
-            myDashDirection = myStickDirection;
-        }
-
-        if(myIsDashing)
-        {
-            myCurrentDashTime -= Time.deltaTime;
-            if(myCurrentDashTime <= 0)
-            {
-                myCurrentDashTime = 0;
-                gameObject.layer = 10;
-                myIsDashing = false;
-            }
         }
     }
 
@@ -141,7 +181,6 @@ public class PlayerMovement : MonoBehaviour
         {
             gameObject.layer = 10;
             myIsDashing = false;
-            myCurrentDashTime = 0;
         }
     }
 
@@ -167,32 +206,23 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if (!myCanMove && myRigidbody2D.velocity != Vector2.zero)
+        if (!myWallGrabbed)
         {
-            Vector3 targetVelocity = new Vector2(0.0f, myRigidbody2D.velocity.y);
-            myRigidbody2D.velocity = Vector3.SmoothDamp(myRigidbody2D.velocity, targetVelocity, ref myVelocity, 0.5f);
-            return;
+            if (!myCanMove && myRigidbody2D.velocity != Vector2.zero)
+            {
+                Vector3 targetVelocity = new Vector2(0.0f, myRigidbody2D.velocity.y);
+                myRigidbody2D.velocity = Vector3.SmoothDamp(myRigidbody2D.velocity, targetVelocity, ref myVelocity, 0.5f);
+                return;
+            }
         }
 
-        float horizontalMovement = Input.GetAxis("Horizontal") * (mySpeed + (mySpeed * mySpeedBonus)) * Time.fixedDeltaTime;
-
-        MovePlayer(horizontalMovement);
-    }
-
-    private void MovePlayer(float aMovement)
-    {
-        Vector3 targetVelocity = new Vector2(aMovement, myRigidbody2D.velocity.y);
-        myRigidbody2D.velocity = Vector3.SmoothDamp(myRigidbody2D.velocity, targetVelocity, ref myVelocity, 0.05f);
-
-        if (myIsJumping)
+        float moveInput = Input.GetAxis("Horizontal");
+        myRigidbody2D.velocity = new Vector2(moveInput * mySpeed * Time.deltaTime, myRigidbody2D.velocity.y);
+        if (moveInput != 0 && ((moveInput > 0 && myWallDirection < 0) || (moveInput < 0 && myWallDirection > 0)))
         {
-            myRigidbody2D.AddForce(Vector2.up * myJumpForce);
-            myIsJumping = false;
-        }
-
-        if(myIsDashing)
-        {
-            myRigidbody2D.velocity += myDashDirection.normalized * myDashForce;
+            myWallGrabbed = false;
+            myAnimator.SetBool("WallGrab", false);
+            myRigidbody2D.gravityScale = 1;
         }
     }
 
@@ -210,5 +240,14 @@ public class PlayerMovement : MonoBehaviour
     {
         myIsBlocked = aNewState;
         myRigidbody2D.velocity = Vector2.zero;
+    }
+
+    public void WallGrabbed(bool aNewState)
+    {
+        myWallGrabbed = aNewState;
+        if(myWallGrabbed)
+        {
+            mycanJump = true;
+        }
     }
 }

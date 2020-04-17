@@ -24,6 +24,11 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private float myPlayerVelocityImpactY = 1.0f;
 
+    private bool myWantToSeeUnder = false;
+
+    [SerializeField]
+    private float myDownVisibility = 3.0f;
+
     private void Start()
     {
         myTransform = transform;
@@ -39,6 +44,15 @@ public class PlayerCamera : MonoBehaviour
         targetPos.y += myYOffset;
         Vector2 playerVel = myPlayerRigidBody.velocity.normalized;
         targetPos += new Vector3(playerVel.x * myPlayerVelocityImpactX, playerVel.y * myPlayerVelocityImpactY, 0);
+        if(myWantToSeeUnder)
+        {
+            targetPos += Vector3.down * myDownVisibility;
+        }
         myTransform.position = Vector3.Lerp(myTransform.position, targetPos, Time.deltaTime * mySpeed);
+    }
+
+    public void SetWantToSeeUnder(bool aNewState)
+    {
+        myWantToSeeUnder = aNewState;
     }
 }
