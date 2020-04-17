@@ -36,6 +36,9 @@ public class PlayerAction : MonoBehaviour
     private bool myCanOpenWorkbench = false;
     private bool myIsInWorkbench = false;
 
+    [SerializeField]
+    private GameObject myInteractionButtonGameObject = null;
+
     private void Start()
     {
         myPlayer = GetComponent<Player>();
@@ -142,5 +145,6 @@ public class PlayerAction : MonoBehaviour
     public void SetCanOpenWorkbench(bool aNewState)
     {
         myCanOpenWorkbench = aNewState;
+        myInteractionButtonGameObject.SetActive(aNewState);
     }
 }

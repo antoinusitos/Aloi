@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Analytics;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
@@ -141,7 +139,7 @@ public class PlayerInventory : MonoBehaviour
                 ReplaceChips();
             }
         }
-        else if (myCanModify && Input.GetButtonDown("Cancel"))
+        else if (myCanModify && (Input.GetButtonDown("Cancel") || Input.GetButtonDown("Dash")))
         {
             if(myIsReplacing)
             {
@@ -150,7 +148,7 @@ public class PlayerInventory : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetAxis("NaviguateRightLeft") > 0)
         {
             if(myIsReplacing)
             {
@@ -161,7 +159,7 @@ public class PlayerInventory : MonoBehaviour
                 MoveSelectCursor(true);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (Input.GetAxis("NaviguateRightLeft") < 0)
         {
             if (myIsReplacing)
             {
