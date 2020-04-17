@@ -63,6 +63,22 @@ public class PlayerMovement : MonoBehaviour
         
         myAnimator.SetFloat("Speed", myRigidbody2D.velocity.x < 0 ? myRigidbody2D.velocity.x * -1 : myRigidbody2D.velocity.x);
 
+        if (myRigidbody2D.velocity.y > 0)
+        {
+            myAnimator.SetBool("Jumping", true);
+            myAnimator.SetBool("Falling", false);
+        }
+        else if (myRigidbody2D.velocity.y < 0)
+        {
+            myAnimator.SetBool("Jumping", false);
+            myAnimator.SetBool("Falling", true);
+        }
+        else
+        {
+            myAnimator.SetBool("Jumping", false);
+            myAnimator.SetBool("Falling", false);
+        }
+
         if (!myCanMove)
         {
             return;
