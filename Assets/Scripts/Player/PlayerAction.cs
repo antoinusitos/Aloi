@@ -94,11 +94,13 @@ public class PlayerAction : MonoBehaviour
         {
             myIsInWorkbench = true;
             myPlayer.GetPlayerInventory().SetInWorkBench(true);
+            myPlayer.GetPlayerMovement().Block(true);
         }
         else if (Input.GetButtonDown("Cancel") && myCanOpenWorkbench && myIsInWorkbench)
         {
             myIsInWorkbench = false;
             myPlayer.GetPlayerInventory().SetInWorkBench(false);
+            myPlayer.GetPlayerMovement().Block(false);
         }
 
         if (myIsPunching)

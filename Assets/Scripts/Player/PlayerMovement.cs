@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     private float mySpeed = 5.0f;
 
     [SerializeField]
-    private float myJumpForce = 5.0f;
+    private float myJumpForce = 8.0f;
 
     [SerializeField]
     private float myDashForce = 10.0f;
@@ -155,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(Input.GetButtonDown("Jump") && mycanJump)
         {
-            myRigidbody2D.velocity = Vector2.up * 10.0f;
+            myRigidbody2D.velocity = Vector2.up * myJumpForce;
             mycanJump = false;
             myWallGrabbed = false;
             myAnimator.SetBool("WallGrab", false);
@@ -169,7 +169,7 @@ public class PlayerMovement : MonoBehaviour
             myAnimator.SetBool("WallGrab", false);
             mycanJump = false;
             myCanDash = false;
-            myRigidbody2D.velocity = myStickDirection.normalized * 10.0f;
+            myRigidbody2D.velocity = myStickDirection.normalized * myDashForce;
             if(myCanGoThroughEnemies)
                 gameObject.layer = 12;
         }
