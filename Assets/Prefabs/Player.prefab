@@ -5313,8 +5313,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mySpeed: 250
-  myJumpForce: 350
-  myDashForce: 1
+  myJumpForce: 8
+  myDashForce: 8
   mySpritePivot: {fileID: 3843930229515995589}
   myAnimator: {fileID: 449868756}
   myPlayerCamera: {fileID: 0}

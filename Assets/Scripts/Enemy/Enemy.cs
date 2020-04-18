@@ -19,6 +19,12 @@ public class Enemy : MonoBehaviour
 
     private EnemyState myEnemyState = EnemyState.IDLE;
 
+    [SerializeField]
+    private int myGoldReward = 5;
+
+    [SerializeField]
+    private int myExperienceReward = 50;
+
     private void Start()
     {
         myEnemyLife = GetComponent<EnemyLife>();
@@ -50,5 +56,11 @@ public class Enemy : MonoBehaviour
         {
             myMovingBackAndForth.SetCanMove(true);
         }
+    }
+
+    public void Death()
+    {
+        FindObjectOfType<PlayerStats>().AddCurrency(myGoldReward);
+        FindObjectOfType<PlayerStats>().AddExperience(myExperienceReward);
     }
 }

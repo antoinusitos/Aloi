@@ -17,12 +17,12 @@ public class PlayerStats : MonoBehaviour
     [SerializeField]
     private Slider myHeatSlider = null;
 
-    private int myCurrency = 100;
+    private int myCurrency = 0;
 
     [SerializeField]
     private Text myCurrentText = null;
 
-    private int myExperience = 2165;
+    private int myExperience = 0;
 
     private int myMaxWatt = 200;
     private int myCurrentWatt = 0;
@@ -78,6 +78,16 @@ public class PlayerStats : MonoBehaviour
         myCurrentText.text = myCurrency.ToString();
     }
 
+    public void AddExperience(int aValue)
+    {
+        myExperience += aValue;
+    }
+
+    public int GetExperience()
+    {
+        return myExperience;
+    }
+
     public void RemoveCurrency(int aValue)
     {
         myCurrency -= aValue;
@@ -107,11 +117,6 @@ public class PlayerStats : MonoBehaviour
     public int GetCurrentLife()
     {
         return myCurrentlife;
-    }
-
-    public int GetExperience()
-    {
-        return myExperience;
     }
 
     public int GetMaxWatt()

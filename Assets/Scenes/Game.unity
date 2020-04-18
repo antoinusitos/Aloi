@@ -3875,6 +3875,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 7026445580832289185, guid: dd44aa64616ce57429431b4f8b3b008c,
+        type: 3}
+      propertyPath: myGoldReward
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd44aa64616ce57429431b4f8b3b008c, type: 3}
 --- !u!1001 &9162412310254279113

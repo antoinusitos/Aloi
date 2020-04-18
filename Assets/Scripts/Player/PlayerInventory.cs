@@ -155,7 +155,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if(myIsReplacing)
             {
-                //MoveReplaceCursor(1, 0);
+                MoveReplaceCursor(1, 0);
             }
             else
             {
@@ -166,7 +166,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if (myIsReplacing)
             {
-                //MoveReplaceCursor(-1, 0);
+                MoveReplaceCursor(-1, 0);
             }
             else
             {
@@ -177,7 +177,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if (myIsReplacing)
             {
-                //MoveReplaceCursor(0, 1);
+                MoveReplaceCursor(0, 1);
             }
             else
             {
@@ -188,7 +188,7 @@ public class PlayerInventory : MonoBehaviour
         {
             if (myIsReplacing)
             {
-                //MoveReplaceCursor(0, 1);
+                MoveReplaceCursor(0, 1);
             }
             else
             {
@@ -727,7 +727,7 @@ public class PlayerInventory : MonoBehaviour
         return;
     }
 
-    private void MoveReplaceCursor(bool aMoveRight)
+    private void MoveReplaceCursor(int aMoveRight, int aMoveTop)
     {
         if(myCurrentUpgradeReplaceTransformSelected == null)
         {
@@ -736,14 +736,24 @@ public class PlayerInventory : MonoBehaviour
 
         bool found = false;
 
-        if (aMoveRight && myUpgradesInventory.Count - 1 > myUpgradeReplaceIndex)
+        if (aMoveRight > 0 && myUpgradesInventory.Count - 1 > myUpgradeReplaceIndex)
         {
             myUpgradeReplaceIndex++;
             found = true;
         }
-        else if (!aMoveRight && myUpgradeReplaceIndex > 0)
+        else if (aMoveRight < 0 && myUpgradeReplaceIndex > 0)
         {
             myUpgradeReplaceIndex--;
+            found = true;
+        }
+        else if (aMoveTop > 0 && myUpgradeReplaceIndex + 5 < myUpgradesInventory.Count)
+        {
+            myUpgradeReplaceIndex += 5;
+            found = true;
+        }
+        else if (aMoveTop < 0 && myUpgradeReplaceIndex - 5 > 0)
+        {
+            myUpgradeReplaceIndex -= 5;
             found = true;
         }
 

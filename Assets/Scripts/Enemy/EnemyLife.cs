@@ -34,6 +34,7 @@ public class EnemyLife : MonoBehaviour
         myEnemy.SetEnemyState(EnemyState.KNOCKED);
         if(myCurrentLife <= 0)
         {
+            myEnemy.Death();
             Destroy(gameObject);
         }
     }
