@@ -8,7 +8,7 @@ public class OverampedBiceps : Upgrade
     public OverampedBiceps()
     {
         myUpgradeName = "Overamped Biceps";
-        myUpgradeDescription = "Moving Faster.";
+        myUpgradeDescription = "Punch harder.";
         myUpgradeType = UpgradeType.TYPEB;
         myHeatValue = 0;
         myWattValue = 50;

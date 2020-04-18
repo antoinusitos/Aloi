@@ -217,7 +217,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         float moveInput = Input.GetAxis("Horizontal");
-        myRigidbody2D.velocity = new Vector2(moveInput * mySpeed * Time.deltaTime, myRigidbody2D.velocity.y);
+        myRigidbody2D.velocity = new Vector2(moveInput * (mySpeed + (mySpeed * mySpeedBonus))* Time.deltaTime, myRigidbody2D.velocity.y);
         if (moveInput != 0 && ((moveInput > 0 && myWallDirection < 0) || (moveInput < 0 && myWallDirection > 0)))
         {
             myWallGrabbed = false;

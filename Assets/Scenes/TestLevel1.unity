@@ -9884,6 +9884,11 @@ PrefabInstance:
       propertyPath: myPostOpenChest.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2480753097820379550, guid: 001767161ef0d734582e066647a2d3f1,
+        type: 3}
+      propertyPath: myUpgradeGiven
+      value: Momemtum Booster
+      objectReference: {fileID: 0}
     - target: {fileID: 4731940556181015617, guid: 001767161ef0d734582e066647a2d3f1,
         type: 3}
       propertyPath: m_Name

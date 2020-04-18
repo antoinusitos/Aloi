@@ -101,11 +101,14 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField]
     private CanvasEarnObject myCanvasEarnObject = null;
 
+    private Player myPlayer = null;
+
     private void Start()
     {
         myPlayerUpgrades = GetComponent<PlayerUpgrades>();
         myPlayerStats = GetComponent<PlayerStats>();
         //myUpgradesInventory.Add(UpgradesManager.GetInstance().GetUpgrade(1));
+        myPlayer = GetComponent<Player>();
     }
 
     private void Update()
@@ -379,7 +382,14 @@ public class PlayerInventory : MonoBehaviour
         myPlayerStats.AddCurrentWatt(myCurrentUpgradeReplaceSelected.GetWatt());
 
         Upgrade temp = myCurrentUpgradeSelected;
+        if(myCurrentUpgradeSelected != null)
+            myCurrentUpgradeSelected.RemoveUpgrade(myPlayer);
+
         myCurrentUpgradeSelected = myCurrentUpgradeReplaceSelected;
+
+        if (myCurrentUpgradeSelected != null)
+            myCurrentUpgradeSelected.AddUpgrade(myPlayer);
+
         myCurrentUpgradeReplaceSelected = temp;
 
         HideInventoryChip();
