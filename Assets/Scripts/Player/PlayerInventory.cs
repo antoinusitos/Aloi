@@ -155,22 +155,44 @@ public class PlayerInventory : MonoBehaviour
         {
             if(myIsReplacing)
             {
-                MoveReplaceCursor(true);
+                //MoveReplaceCursor(1, 0);
             }
             else
             {
-                MoveSelectCursor(true);
+                MoveSelectCursor(1, 0);
             }
         }
         else if (Input.GetAxis("NaviguateRightLeft") < 0)
         {
             if (myIsReplacing)
             {
-                MoveReplaceCursor(false);
+                //MoveReplaceCursor(-1, 0);
             }
             else
             {
-                MoveSelectCursor(false);
+                MoveSelectCursor(-1, 0);
+            }
+        }
+        else if (Input.GetAxis("NaviguateUpDown") > 0)
+        {
+            if (myIsReplacing)
+            {
+                //MoveReplaceCursor(0, 1);
+            }
+            else
+            {
+                MoveSelectCursor(0, 1);
+            }
+        }
+        else if (Input.GetAxis("NaviguateUpDown") < 0)
+        {
+            if (myIsReplacing)
+            {
+                //MoveReplaceCursor(0, 1);
+            }
+            else
+            {
+                MoveSelectCursor(0, -1);
             }
         }
     }
@@ -476,7 +498,7 @@ public class PlayerInventory : MonoBehaviour
         myIsReplacing = false;
     }
 
-    private void MoveSelectCursor(bool aMoveRight)
+    private void MoveSelectCursor(int aMoveRight, int aMoveTop)
     {
         Upgrade[] upgrades = null;
 
@@ -484,7 +506,7 @@ public class PlayerInventory : MonoBehaviour
         {
             upgrades = myPlayerUpgrades.GetTypeAUpgrades();
 
-            if (aMoveRight)
+            if (aMoveRight > 0)
             {
                 if ((myUpgradeIndex == 1 || myUpgradeIndex == 3))
                 {
@@ -495,19 +517,36 @@ public class PlayerInventory : MonoBehaviour
                     ChangeSelectedCategory(out upgrades, 1);
                 }
             }
-            else
+            else if (aMoveRight < 0)
             {
                 if ((myUpgradeIndex == 0 && upgrades.Length > 1) || (myUpgradeIndex == 2 && upgrades.Length > 3))
                 {
                     myUpgradeIndex++;
                 }
             }
-
+            else if (aMoveTop < 0)
+            {
+                if ((myUpgradeIndex == 2 || myUpgradeIndex == 3))
+                {
+                    myUpgradeIndex -= 2;
+                }
+                else
+                {
+                    ChangeSelectedCategory(out upgrades, 2);
+                }
+            }
+            else if (aMoveTop > 0)
+            {
+                if ((myUpgradeIndex == 0 && upgrades.Length > 2) || (myUpgradeIndex == 2 && upgrades.Length > 4))
+                {
+                    myUpgradeIndex += 2;
+                }
+            }
         }
         else if (myUpgradeCategoryIndex == 1)
         {
             upgrades = myPlayerUpgrades.GetTypeBUpgrades();
-            if (!aMoveRight)
+            if (aMoveRight < 0)
             {
                 if ((myUpgradeIndex == 1 || myUpgradeIndex == 3) && upgrades[myUpgradeIndex - 1] != null)
                 {
@@ -518,18 +557,36 @@ public class PlayerInventory : MonoBehaviour
                     ChangeSelectedCategory(out upgrades, -1);
                 }
             }
-            else
+            else if (aMoveRight > 0)
             {
                 if ((myUpgradeIndex == 0 && upgrades.Length > 1) || (myUpgradeIndex == 2 && upgrades.Length > 3))
                 {
                     myUpgradeIndex++;
                 }
             }
+            else if (aMoveTop < 0)
+            {
+                if ((myUpgradeIndex == 2 || myUpgradeIndex == 3))
+                {
+                    myUpgradeIndex -= 2;
+                }
+                else
+                {
+                    ChangeSelectedCategory(out upgrades, 2);
+                }
+            }
+            else if (aMoveTop > 0)
+            {
+                if ((myUpgradeIndex == 0 && upgrades.Length > 2) || (myUpgradeIndex == 2 && upgrades.Length > 4))
+                {
+                    myUpgradeIndex += 2;
+                }
+            }
         }
         else if (myUpgradeCategoryIndex == 2)
         {
             upgrades = myPlayerUpgrades.GetTypeCUpgrades();
-            if (aMoveRight)
+            if (aMoveRight > 0)
             {
                 if ((myUpgradeIndex == 1 || myUpgradeIndex == 3) && upgrades[myUpgradeIndex - 1] != null)
                 {
@@ -540,18 +597,36 @@ public class PlayerInventory : MonoBehaviour
                     ChangeSelectedCategory(out upgrades, 1);
                 }
             }
-            else
+            else if (aMoveRight < 0)
             {
                 if ((myUpgradeIndex == 0 && upgrades.Length > 1) || (myUpgradeIndex == 2 && upgrades.Length > 3))
                 {
                     myUpgradeIndex++;
                 }
             }
+            else if (aMoveTop > 0)
+            {
+                if ((myUpgradeIndex == 2 || myUpgradeIndex == 3))
+                {
+                    myUpgradeIndex += 2;
+                }
+                else
+                {
+                    ChangeSelectedCategory(out upgrades, -2);
+                }
+            }
+            else if (aMoveTop < 0)
+            {
+                if ((myUpgradeIndex == 0 && upgrades.Length > 2) || (myUpgradeIndex == 2 && upgrades.Length > 4))
+                {
+                    myUpgradeIndex -= 2;
+                }
+            }
         }
         else if (myUpgradeCategoryIndex == 3)
         {
             upgrades = myPlayerUpgrades.GetTypeDUpgrades();
-            if (!aMoveRight)
+            if (aMoveRight < 0)
             {
                 if ((myUpgradeIndex == 1 || myUpgradeIndex == 3) && upgrades[myUpgradeIndex - 1] != null)
                 {
@@ -562,11 +637,29 @@ public class PlayerInventory : MonoBehaviour
                     ChangeSelectedCategory(out upgrades, -1);
                 }
             }
-            else
+            else if (aMoveRight > 0)
             {
                 if ((myUpgradeIndex == 0 && upgrades.Length > 1) || (myUpgradeIndex == 2 && upgrades.Length > 3))
                 {
                     myUpgradeIndex++;
+                }
+            }
+            else if (aMoveTop > 0)
+            {
+                if ((myUpgradeIndex == 2 || myUpgradeIndex == 3))
+                {
+                    myUpgradeIndex += 2;
+                }
+                else
+                {
+                    ChangeSelectedCategory(out upgrades, -2);
+                }
+            }
+            else if (aMoveTop < 0)
+            {
+                if ((myUpgradeIndex == 0 && upgrades.Length > 2) || (myUpgradeIndex == 2 && upgrades.Length > 4))
+                {
+                    myUpgradeIndex -= 2;
                 }
             }
         }
@@ -632,31 +725,6 @@ public class PlayerInventory : MonoBehaviour
         someUpgrade = temp;
 
         return;
-
-        if (temp[0] == null)
-        {
-            if (aSens == 1 && (categoryTemp == 1 || categoryTemp == 3))
-            {
-                someUpgrade = categoryTemp == 1 ? myPlayerUpgrades.GetTypeBUpgrades() : myPlayerUpgrades.GetTypeDUpgrades();
-                return;
-            }
-            else if (aSens == -1 && (categoryTemp == 0 || categoryTemp == 2))
-            {
-                someUpgrade = categoryTemp == 0 ? myPlayerUpgrades.GetTypeAUpgrades() : myPlayerUpgrades.GetTypeCUpgrades();
-                return;
-            }
-            else
-            {
-                someUpgrade = null;
-                Debug.LogError("Out of Scope", this);
-            }
-        }
-        else
-        {
-            myUpgradeIndex = 0;
-            myUpgradeCategoryIndex = categoryTemp;
-            someUpgrade = temp;
-        }
     }
 
     private void MoveReplaceCursor(bool aMoveRight)
