@@ -98,11 +98,14 @@ public class PlayerInventory : MonoBehaviour
     private bool myCanModify = false;
     private bool myInWorkbench = false;
 
+    [SerializeField]
+    private CanvasEarnObject myCanvasEarnObject = null;
+
     private void Start()
     {
         myPlayerUpgrades = GetComponent<PlayerUpgrades>();
         myPlayerStats = GetComponent<PlayerStats>();
-        myUpgradesInventory.Add(UpgradesManager.GetInstance().GetUpgrade(1));
+        //myUpgradesInventory.Add(UpgradesManager.GetInstance().GetUpgrade(1));
     }
 
     private void Update()
@@ -702,5 +705,15 @@ public class PlayerInventory : MonoBehaviour
             UpdateInventory();
         else
             CloseInventory();
+    }
+
+    public void AddUpgradeInventory(Upgrade anUpgrade)
+    {
+        myUpgradesInventory.Add(anUpgrade);
+    }
+
+    public void ShowEarnObject(Upgrade anUpgrade)
+    {
+        myCanvasEarnObject.AddObjectToShow(anUpgrade.GetName());
     }
 }

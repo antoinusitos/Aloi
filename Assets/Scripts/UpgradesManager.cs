@@ -31,4 +31,17 @@ public class UpgradesManager : MonoBehaviour
     {
         return myUpgrades[anIndex];
     }
+
+    public Upgrade GetUpgrade(string aName)
+    {
+        for(int i = 0; i < myUpgrades.Count; i++)
+        {
+            if(myUpgrades[i].GetName() == aName)
+            {
+                return myUpgrades[i];
+            }
+        }
+
+        return null;
+    }
 }

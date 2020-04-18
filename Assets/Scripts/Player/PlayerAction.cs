@@ -36,6 +36,10 @@ public class PlayerAction : MonoBehaviour
     private bool myCanOpenWorkbench = false;
     private bool myIsInWorkbench = false;
 
+    private bool myCanOpenChest = false;
+
+    private Chest myChestToOpen = null;
+
     [SerializeField]
     private GameObject myInteractionButtonGameObject = null;
 
@@ -96,6 +100,10 @@ public class PlayerAction : MonoBehaviour
             myPlayer.GetPlayerInventory().SetInWorkBench(true);
             myPlayer.GetPlayerMovement().Block(true);
         }
+        else if (Input.GetButtonDown("Interact") && myCanOpenChest && myChestToOpen != null)
+        {
+            myChestToOpen.OpenChest();
+        }
         else if (Input.GetButtonDown("Cancel") && myCanOpenWorkbench && myIsInWorkbench)
         {
             myIsInWorkbench = false;
@@ -148,5 +156,12 @@ public class PlayerAction : MonoBehaviour
     {
         myCanOpenWorkbench = aNewState;
         myInteractionButtonGameObject.SetActive(aNewState);
+    }
+
+    public void SetCanOpenChest(bool aNewState, Chest aChest)
+    {
+        myCanOpenChest = aNewState;
+        myInteractionButtonGameObject.SetActive(aNewState);
+        myChestToOpen = aChest;
     }
 }
