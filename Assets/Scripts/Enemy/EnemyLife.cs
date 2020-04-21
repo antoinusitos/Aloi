@@ -2,6 +2,7 @@
 
 public class EnemyLife : MonoBehaviour
 {
+    [SerializeField]
     private int myMaxLife = 50;
     private int myCurrentLife = 50;
 
@@ -13,6 +14,11 @@ public class EnemyLife : MonoBehaviour
     public void SetEnemy(Enemy aNewEnemy)
     {
         myEnemy = aNewEnemy;
+    }
+
+    private void Start()
+    {
+        myCurrentLife = myMaxLife;
     }
 
     private void Update()

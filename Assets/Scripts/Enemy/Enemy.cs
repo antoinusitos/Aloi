@@ -32,7 +32,8 @@ public class Enemy : MonoBehaviour
         myMovingBackAndForth = GetComponent<MovingBackAndForth>();
         myMovingBackAndForth.SetEnemy(this);
         myEnemyHitBox = GetComponentInChildren<EnemyHitBox>();
-        myEnemyHitBox.SetEnemy(this);
+        if(myEnemyHitBox != null)
+            myEnemyHitBox.SetEnemy(this);
     }
 
     public EnemyLife GetEnemyLife()
@@ -50,7 +51,8 @@ public class Enemy : MonoBehaviour
         myEnemyState = aNewState;
         if(aNewState == EnemyState.KNOCKED)
         {
-            myEnemyHitBox.StopAttack();
+            if (myEnemyHitBox != null)
+                myEnemyHitBox.StopAttack();
         }
         else
         {
