@@ -28,7 +28,8 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         myEnemyLife = GetComponent<EnemyLife>();
-        myEnemyLife.SetEnemy(this);
+        if(myEnemyLife != null)
+            myEnemyLife.SetEnemy(this);
         myMovingBackAndForth = GetComponent<MovingBackAndForth>();
         myMovingBackAndForth.SetEnemy(this);
         myEnemyHitBox = GetComponentInChildren<EnemyHitBox>();

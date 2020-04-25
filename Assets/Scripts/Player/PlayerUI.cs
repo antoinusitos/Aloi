@@ -15,6 +15,12 @@ public class PlayerUI : MonoBehaviour
     [SerializeField]
     private Text myDeadText = null;
 
+    [SerializeField]
+    private Text myDialogueText = null;
+
+    [SerializeField]
+    private GameObject myDialogueGO = null;
+
     private void Awake()
     {
         myPlayerMovement = GetComponent<PlayerMovement>();
@@ -117,5 +123,16 @@ public class PlayerUI : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+    }
+
+    public void ShowDialogue(string aText)
+    {
+        myDialogueGO.SetActive(true);
+        myDialogueText.text = aText;
+    }
+
+    public void HideDialogue()
+    {
+        myDialogueGO.SetActive(false);
     }
 }

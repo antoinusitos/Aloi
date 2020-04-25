@@ -43,6 +43,9 @@ public class PlayerAction : MonoBehaviour
     [SerializeField]
     private GameObject myInteractionButtonGameObject = null;
 
+    private bool myCanInteract = false;
+    private PNJ myPNJ = null;
+
     private void Start()
     {
         myPlayer = GetComponent<Player>();
@@ -104,11 +107,22 @@ public class PlayerAction : MonoBehaviour
         {
             myChestToOpen.OpenChest();
         }
+        else if (Input.GetButtonDown("Interact") && myCanInteract && myPNJ != null)
+        {
+            myPNJ.Interact(true);
+            myInteractionButtonGameObject.SetActive(false);
+        }
         else if (Input.GetButtonDown("Cancel") && myCanOpenWorkbench && myIsInWorkbench)
         {
             myIsInWorkbench = false;
             myPlayer.GetPlayerInventory().SetInWorkBench(false);
             myPlayer.GetPlayerMovement().Block(false);
+        }
+        else if (Input.GetButtonDown("Cancel") && myCanInteract && myPNJ != null)
+        {
+            myPNJ.Interact(false);
+            myInteractionButtonGameObject.SetActive(true);
+            myPlayer.GetPlayerUI().HideDialogue();
         }
 
         if (myIsPunching)
@@ -163,5 +177,12 @@ public class PlayerAction : MonoBehaviour
         myCanOpenChest = aNewState;
         myInteractionButtonGameObject.SetActive(aNewState);
         myChestToOpen = aChest;
+    }
+
+    public void SetCanInteract(bool aNewState, PNJ aPNJ)
+    {
+        myCanInteract = aNewState;
+        myPNJ = aPNJ;
+        myInteractionButtonGameObject.SetActive(aNewState);
     }
 }

@@ -23,14 +23,39 @@ public class MovingBackAndForth : MonoBehaviour
 
     private Enemy myEnemy = null;
 
+    [SerializeField]
+    private float myStopDelay = 0.0f;
+    private float myCurrentStopDelay = 0;
+    private bool myIsWaiting = false;
+
+    [SerializeField]
+    private Animator myAnimator = null;
+
     private void Start()
     {
         myRigidbody2D = GetComponent<Rigidbody2D>();
+        if(myAnimator != null)
+            myAnimator.SetBool("Moving", true);
     }
 
     public void SetEnemy(Enemy aNewEnemy)
     {
         myEnemy = aNewEnemy;
+    }
+
+    private void Update()
+    {
+        if(myIsWaiting)
+        {
+            myCurrentStopDelay += Time.deltaTime;
+            if(myCurrentStopDelay >= myStopDelay)
+            {
+                myCurrentStopDelay = 0;
+                myIsWaiting = false;
+                if (myAnimator != null)
+                    myAnimator.SetBool("Moving", true);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -40,10 +65,13 @@ public class MovingBackAndForth : MonoBehaviour
             return;
         }
 
-        if(myEnemy.GetEnemyState() == EnemyState.KNOCKED)
+        if(myEnemy != null && myEnemy.GetEnemyState() == EnemyState.KNOCKED)
         {
             return;
         }
+
+        if (myIsWaiting)
+            return;
 
         Vector2 pos = Vector2.zero;
         if (myTargetIsB)
@@ -60,6 +88,11 @@ public class MovingBackAndForth : MonoBehaviour
         if(Vector3.Distance(myRigidbody2D.position, pos) < 0.1f)
         {
             myTargetIsB = !myTargetIsB;
+            myIsWaiting = true;
+            if(myAnimator != null)
+            {
+                myAnimator.SetBool("Moving", false);
+            }
         }
 
         if (myRigidbody2D.position.x > pos.x)
@@ -77,5 +110,7 @@ public class MovingBackAndForth : MonoBehaviour
     public void SetCanMove(bool aNewState)
     {
         myCanMove = aNewState;
+        if (myAnimator != null)
+            myAnimator.SetBool("Moving", aNewState);
     }
 }

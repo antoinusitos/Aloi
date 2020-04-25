@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private PlayerStats myPlayerStats = null;
     private PlayerInventory myPlayerInventory = null;
     private PlayerUpgrades myPlayerUpgrades = null;
+    private PlayerUI myPlayerUI = null;
 
     private void Awake()
     {
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour
         myPlayerStats = GetComponent<PlayerStats>();
         myPlayerInventory = GetComponent<PlayerInventory>();
         myPlayerUpgrades = GetComponent<PlayerUpgrades>();
+        myPlayerUI = GetComponent<PlayerUI>();
     }
 
     public PlayerAction GetPlayerAction()
@@ -40,5 +42,10 @@ public class Player : MonoBehaviour
     public PlayerUpgrades GetPlayerUpgrades()
     {
         return myPlayerUpgrades;
+    }
+
+    public PlayerUI GetPlayerUI()
+    {
+        return myPlayerUI;
     }
 }
