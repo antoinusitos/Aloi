@@ -153,6 +153,13 @@ public class PlayerInventory : MonoBehaviour
                 HideInventoryChip();
             }
         }
+        else if (!myCanModify && (Input.GetButtonDown("Cancel") || Input.GetButtonDown("Dash")))
+        {
+            myInventoryOpen = false;
+            myInventory.SetActive(myInventoryOpen);
+            CloseInventory();
+            return;
+        }
 
         if (Input.GetAxis("NaviguateRightLeft") > 0)
         {

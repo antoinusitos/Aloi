@@ -107,10 +107,11 @@ public class PlayerAction : MonoBehaviour
         {
             myChestToOpen.OpenChest();
         }
-        else if (Input.GetButtonDown("Interact") && myCanInteract && myPNJ != null)
+        else if (Input.GetButtonDown("Interact") && myCanInteract && myPNJ != null && !myPlayer.GetPlayerMovement().GetIsInDialogue())
         {
             myPNJ.Interact(true);
             myInteractionButtonGameObject.SetActive(false);
+            myPlayer.GetPlayerMovement().SetIsInDialogue(true);
         }
         else if (Input.GetButtonDown("Cancel") && myCanOpenWorkbench && myIsInWorkbench)
         {
@@ -118,11 +119,12 @@ public class PlayerAction : MonoBehaviour
             myPlayer.GetPlayerInventory().SetInWorkBench(false);
             myPlayer.GetPlayerMovement().Block(false);
         }
-        else if (Input.GetButtonDown("Cancel") && myCanInteract && myPNJ != null)
+        else if (Input.GetButtonDown("Cancel") && myCanInteract && myPNJ != null && myPlayer.GetPlayerMovement().GetIsInDialogue())
         {
             myPNJ.Interact(false);
             myInteractionButtonGameObject.SetActive(true);
             myPlayer.GetPlayerUI().HideDialogue();
+            myPlayer.GetPlayerMovement().SetIsInDialogue(false);
         }
 
         if (myIsPunching)

@@ -50,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
 
     private float myWallDirection = 0;
 
+    private bool myIsInDialogue = false;
+
     [SerializeField]
     private PlayerCamera myPlayerCamera = null;
 
@@ -110,6 +112,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if(myIsInCinematic)
+        {
+            return;
+        }
+
+        if(myIsInDialogue)
         {
             return;
         }
@@ -206,6 +213,11 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        if (myIsInDialogue)
+        {
+            return;
+        }
+
         if (!myWallGrabbed)
         {
             if (!myCanMove && myRigidbody2D.velocity != Vector2.zero)
@@ -234,6 +246,21 @@ public class PlayerMovement : MonoBehaviour
     public void SetIsInCinematic(bool aNewState)
     {
         myIsInCinematic = aNewState;
+    }
+
+    public bool GetIsInCinematic()
+    {
+        return myIsInCinematic;
+    }
+
+    public void SetIsInDialogue(bool aNewState)
+    {
+        myIsInDialogue = aNewState;
+    }
+
+    public bool GetIsInDialogue()
+    {
+        return myIsInDialogue;
     }
 
     public void Block(bool aNewState)
